@@ -9,6 +9,7 @@ import {
 } from "@/lib/actions/general.action";
 import { Button } from "@/components/ui/button";
 import { getCurrentUser } from "@/lib/actions/auth.action";
+import SkillRadarChart from "@/components/SkillRadarChart";
 
 const Feedback = async ({ params }: RouteParams) => {
     const { id } = await params;
@@ -69,6 +70,17 @@ const Feedback = async ({ params }: RouteParams) => {
                     </div>
                 </div>
             </div>
+
+            {feedback?.categoryScores && (
+                <div className="flex justify-center max-w-2xl mx-auto w-full">
+                    <SkillRadarChart
+                        data={feedback.categoryScores.map((c: any) => ({
+                            name: c.name,
+                            score: c.score,
+                        }))}
+                    />
+                </div>
+            )}
 
             <hr />
 

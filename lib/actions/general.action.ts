@@ -159,3 +159,33 @@ export async function getInterviewsByUserId(
         return null;
     }
 }
+export async function getFeedbacksByUserId(
+    userId: string,
+): Promise<any[] | null> {
+    try {
+        const feedbacks = await prisma.feedback.findMany({
+            where: {
+                userId,
+            },
+            include: {
+                interview: true,
+            },
+            orderBy: {
+                createdAt: "desc",
+            },
+        });
+
+        return feedbacks.map((feedback) => ({
+            ...feedback,
+            categoryScores: feedback.categoryScores as any,
+            createdAt: feedback.createdAt.toISOString(),
+            interview: {
+                ...feedback.interview,
+                createdAt: feedback.interview.createdAt.toISOString(),
+            },
+        }));
+    } catch (error) {
+        console.error("Error getting user feedbacks:", error);
+        return null;
+    }
+}

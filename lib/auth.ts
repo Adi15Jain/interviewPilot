@@ -2,7 +2,7 @@ import { SignJWT, jwtVerify } from "jose";
 import bcrypt from "bcryptjs";
 
 const secret = new TextEncoder().encode(
-    process.env.JWT_SECRET || "your-secret-key-change-this-in-production"
+    process.env.JWT_SECRET || "your-secret-key-change-this-in-production",
 );
 
 // Session duration (1 week)
@@ -14,7 +14,7 @@ export async function hashPassword(password: string): Promise<string> {
 
 export async function verifyPassword(
     password: string,
-    hashedPassword: string
+    hashedPassword: string,
 ): Promise<boolean> {
     return await bcrypt.compare(password, hashedPassword);
 }
@@ -30,7 +30,7 @@ export async function createToken(userId: string): Promise<string> {
 }
 
 export async function verifyToken(
-    token: string
+    token: string,
 ): Promise<{ userId: string } | null> {
     try {
         const { payload } = await jwtVerify(token, secret);
