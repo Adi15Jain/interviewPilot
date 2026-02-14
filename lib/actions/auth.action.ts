@@ -9,12 +9,12 @@ import {
     verifyToken,
     SESSION_DURATION,
 } from "@/lib/auth";
+import { auth, signOut as nextAuthSignOut } from "@/lib/auth.config";
 
-// Set session cookie
+// Set session cookie (for credentials login fallback)
 export async function setSessionCookie(token: string) {
     const cookieStore = await cookies();
 
-    // Set cookie in the browser
     cookieStore.set("session", token, {
         maxAge: SESSION_DURATION,
         httpOnly: true,
@@ -28,7 +28,6 @@ export async function signUp(params: SignUpParams) {
     const { name, email, password } = params;
 
     try {
-        // Check if user exists
         const existingUser = await prisma.user.findUnique({
             where: { email },
         });
@@ -40,7 +39,6 @@ export async function signUp(params: SignUpParams) {
             };
         }
 
-        // Hash password and create user
         const hashedPassword = await hashPassword(password);
 
         await prisma.user.create({
@@ -69,10 +67,7 @@ export async function signIn(params: SignInParams) {
     const { email, idToken } = params;
 
     try {
-        // For compatibility, we'll use email and password from the idToken
-        // In the real implementation, you'd need to modify the AuthForm to send password
-        // For now, we'll assume idToken contains the password
-        const password = idToken; // This should be the actual password
+        const password = idToken;
 
         const user = await prisma.user.findUnique({
             where: { email },
@@ -85,6 +80,14 @@ export async function signIn(params: SignInParams) {
             };
         }
 
+        if (!user.password) {
+            return {
+                success: false,
+                message:
+                    "This account uses Google sign-in. Please sign in with Google.",
+            };
+        }
+
         const isValidPassword = await verifyPassword(password, user.password);
 
         if (!isValidPassword) {
@@ -94,7 +97,6 @@ export async function signIn(params: SignInParams) {
             };
         }
 
-        // Create JWT token
         const token = await createToken(user.id);
         await setSessionCookie(token);
 
@@ -112,16 +114,31 @@ export async function signIn(params: SignInParams) {
     }
 }
 
-// Sign out user by clearing the session cookie
+// Sign out user - clears both NextAuth session and custom cookie
 export async function signOut() {
     const cookieStore = await cookies();
     cookieStore.delete("session");
 }
 
-// Get current user from session cookie
+// Get current user - checks NextAuth session first, falls back to custom JWT
 export async function getCurrentUser(): Promise<User | null> {
-    const cookieStore = await cookies();
+    // First check NextAuth session
+    try {
+        const session = await auth();
+        if (session?.user) {
+            return {
+                id: session.user.id!,
+                name: session.user.name || "",
+                email: session.user.email || "",
+                image: session.user.image || undefined,
+            };
+        }
+    } catch (error) {
+        // NextAuth session not available, fall through to JWT check
+    }
 
+    // Fallback: Check custom JWT cookie
+    const cookieStore = await cookies();
     const sessionCookie = cookieStore.get("session")?.value;
     if (!sessionCookie) return null;
 
@@ -129,20 +146,25 @@ export async function getCurrentUser(): Promise<User | null> {
         const payload = await verifyToken(sessionCookie);
         if (!payload) return null;
 
-        // Get user info from database
         const user = await prisma.user.findUnique({
             where: { id: payload.userId },
             select: {
                 id: true,
                 name: true,
                 email: true,
+                image: true,
                 profileURL: true,
             },
         });
 
         if (!user) return null;
 
-        return user as User;
+        return {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            image: user.image || user.profileURL || undefined,
+        };
     } catch (error) {
         console.error("Error getting current user:", error);
         return null;
