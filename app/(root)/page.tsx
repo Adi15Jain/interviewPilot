@@ -73,7 +73,7 @@ const Home = async () => {
                         <h1 className="text-5xl lg:text-7xl font-black text-white leading-[1.1] tracking-tighter">
                             Master the Art of <br />
                             <span className="text-gradient-premium">
-                                Interviews with AI.
+                                Interviews with AI
                             </span>
                         </h1>
                         <p className="text-xl text-light-400 max-w-xl leading-relaxed">
