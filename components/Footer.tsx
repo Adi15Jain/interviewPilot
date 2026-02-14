@@ -1,54 +1,61 @@
 import Link from "next/link";
-import { Github, Linkedin, Mail, Heart } from "lucide-react";
+import { Github, Linkedin, Mail } from "lucide-react";
 
 const Footer = () => {
     const currentYear = new Date().getFullYear();
 
     return (
-        <footer className="w-full border-t border-white/5 bg-[#020408]/40 backdrop-blur-xl mt-32 relative overflow-hidden group/footer">
-            {/* Futuristic Background Glows */}
-            <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary-200/5 blur-[120px] rounded-full -z-10 group-hover/footer:bg-primary-200/10 transition-colors duration-1000" />
-            <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/5 blur-[120px] rounded-full -z-10 group-hover/footer:bg-blue-500/10 transition-colors duration-1000" />
-
-            <div className="max-w-7xl mx-auto px-12 max-sm:px-6 py-12 relative z-10">
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-16">
-                    {/* Brand Section */}
+        <footer className="w-full border-t border-white/5 bg-[#020408]/40 backdrop-blur-xl mt-10 relative overflow-hidden group/footer mesh-gradient">
+            <div className="max-w-7xl mx-auto px-12 max-sm:px-6 py-16 relative z-10">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-16 lg:gap-24">
+                    {/* Brand & Institution Section */}
                     <div className="flex flex-col gap-6 md:col-span-2">
-                        <div className="flex items-center gap-2 group/logo w-fit">
-                            <h3 className="text-2xl font-black text-white tracking-tighter transition-all duration-300 group-hover/logo:text-primary-200">
-                                InterviewPilot
-                                <span className="text-primary-200 group-hover/logo:text-white transition-colors">
-                                    .
-                                </span>
-                            </h3>
+                        <div className="flex flex-col gap-2">
+                            <div className="flex items-center gap-2 group/logo w-fit">
+                                <h3 className="text-2xl font-black text-white tracking-tighter transition-all duration-300 group-hover/logo:text-primary-200">
+                                    InterviewPilot
+                                    <span className="text-primary-200 group-hover/logo:text-white transition-colors">
+                                        .
+                                    </span>
+                                </h3>
+                            </div>
+                            <div className="flex flex-col gap-1">
+                                <p className="text-primary-200/80 text-[10px] font-black uppercase tracking-[0.2em]">
+                                    A Final Year Major Project
+                                </p>
+                                <p className="text-light-100 text-sm font-bold uppercase tracking-tight">
+                                    College of Computing Sciences & IT
+                                </p>
+                                <p className="text-light-400 text-xs font-semibold">
+                                    Teerthanker Mahaveer University, Moradabad
+                                </p>
+                            </div>
                         </div>
-                        <p className="text-light-400 text-base leading-relaxed max-w-sm">
+                        <p className="text-light-400 text-sm leading-relaxed max-w-sm">
                             The ultimate AI-powered interview practice platform.
-                            Designed to bridge the gap between preparation and
-                            performance with state-of-the-art simulations.
+                            Designed and developed as a pinnacle engineering
+                            achievement by BTECH CSE AI Students (Batch
+                            2022-26).
                         </p>
                     </div>
 
-                    {/* Quick Links */}
+                    {/* Quick Access */}
                     <div className="flex flex-col gap-6">
-                        <h4 className="text-sm font-bold text-white uppercase tracking-widest">
+                        <h4 className="text-[10px] font-black text-white uppercase tracking-[0.3em] opacity-50">
                             Navigation
                         </h4>
-                        <div className="flex flex-col gap-4">
+                        <div className="flex flex-col gap-3">
                             {[
-                                { label: "Home", href: "/" },
-                                {
-                                    label: "Start Interview",
-                                    href: "/interview",
-                                },
-                                { label: "Feedbacks", href: "/feedback" },
+                                { label: "Homepage", href: "/" },
+                                { label: "Practice Lab", href: "/interview" },
+                                { label: "Performance Hub", href: "/feedback" },
                             ].map((link) => (
                                 <Link
                                     key={link.label}
                                     href={link.href}
                                     className="text-light-400 hover:text-primary-200 transition-all text-sm w-fit flex items-center group/link"
                                 >
-                                    <span className="w-0 group-hover/link:w-2 h-px bg-primary-200 mr-0 group-hover/link:mr-2 transition-all duration-300" />
+                                    <span className="w-0 group-hover/link:w-3 h-px bg-primary-200 mr-0 group-hover/link:mr-3 transition-all duration-300" />
                                     {link.label}
                                 </Link>
                             ))}
@@ -57,41 +64,93 @@ const Footer = () => {
 
                     {/* Team Section */}
                     <div className="flex flex-col gap-6">
-                        <h4 className="text-sm font-bold text-white uppercase tracking-widest">
-                            Created By
+                        <h4 className="text-[10px] font-black text-white uppercase tracking-[0.3em] opacity-50">
+                            Development Team
                         </h4>
-                        <div className="flex flex-col gap-4">
-                            <p className="text-light-100 text-sm font-medium flex items-center gap-2">
-                                <span className="size-1.5 rounded-full bg-primary-200 animate-pulse" />
-                                Adi
-                            </p>
-                            <p className="text-light-100 text-sm font-medium flex items-center gap-2">
-                                <span className="size-1.5 rounded-full bg-primary-200 animate-pulse" />
-                                Himanshu
-                            </p>
-                            <p className="text-light-100 text-sm font-medium flex items-center gap-2">
-                                <span className="size-1.5 rounded-full bg-primary-200 animate-pulse" />
-                                Ashmit
-                            </p>
+                        <div className="flex flex-col gap-5">
+                            {[
+                                {
+                                    name: "Adi Jain",
+                                    role: "AI/ML Engineer",
+                                    github: "https://github.com/Adi15Jain",
+                                    linkedin:
+                                        "https://www.linkedin.com/in/adi-jain-73334724b/",
+                                },
+                                {
+                                    name: "Himanshu Jain",
+                                    role: "Backend Developer",
+                                    github: "https://github.com/himanshujain112",
+                                    linkedin:
+                                        "https://www.linkedin.com/in/himanshu-jain112/",
+                                },
+                                {
+                                    name: "Ashmit Jain",
+                                    role: "Frontend Developer",
+                                    github: "https://github.com",
+                                    linkedin:
+                                        "https://www.linkedin.com/in/ashmit--jain/",
+                                },
+                            ].map((creator) => (
+                                <div
+                                    key={creator.name}
+                                    className="flex flex-col gap-1.5 group/item"
+                                >
+                                    <div className="flex items-center justify-between">
+                                        <p className="text-light-100 text-sm font-black tracking-tight">
+                                            {creator.name}
+                                        </p>
+                                        <div className="flex items-center gap-3 opacity-0 group-hover/item:opacity-100 transition-opacity">
+                                            <a
+                                                href={creator.github}
+                                                target="_blank"
+                                                className="text-light-600 hover:text-primary-200 transition-colors"
+                                            >
+                                                <Github className="size-3.5" />
+                                            </a>
+                                            <a
+                                                href={creator.linkedin}
+                                                target="_blank"
+                                                className="text-light-600 hover:text-primary-200 transition-colors"
+                                            >
+                                                <Linkedin className="size-3.5" />
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <p className="text-[10px] text-light-600 font-bold uppercase tracking-wider">
+                                        {creator.role}
+                                    </p>
+                                </div>
+                            ))}
                         </div>
                     </div>
                 </div>
 
-                {/* Bottom Bar */}
-                <div className="mt-20 pt-10 border-t border-white/5 flex flex-col sm:flex-row justify-between items-center gap-6">
-                    <p className="text-light-600 text-xs font-medium tracking-wide">
-                        © {currentYear} INTERVIEWPILOT. ALL RIGHTS RESERVED.
+                {/* Academic Footer Bar */}
+                <div className="mt-20 pt-8 border-t border-white/5 flex flex-col items-center gap-6">
+                    <p className="text-light-600 text-[10px] font-black tracking-[0.3em] text-center uppercase">
+                        © {currentYear} INTERVIEW PILOT • PROUDLY DEVELOPED AT
+                        CCSIT, TMU UNIVERSITY
                     </p>
-                    <div className="flex items-center gap-6">
-                        <p className="text-light-600 text-xs font-semibold flex items-center gap-2">
-                            <span className="size-2 rounded-full border border-primary-200/30 flex items-center justify-center">
-                                <span className="size-0.5 rounded-full bg-primary-200" />
+                    <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-4">
+                        <div className="flex items-center gap-2 group cursor-help">
+                            <span className="text-[9px] font-black text-light-800 uppercase tracking-widest group-hover:text-light-400 transition-colors">
+                                Powered by High-End LLMs
                             </span>
-                            POWERED BY GEMINI
-                        </p>
-                        <p className="text-light-600 text-xs font-semibold">
-                            BUILT WITH NEXT.JS
-                        </p>
+                            <div className="flex items-center gap-1.5">
+                                <span className="size-1 rounded-full bg-primary-200/40" />
+                                <span className="text-[9px] font-black text-light-600 uppercase">
+                                    GPT-4o
+                                </span>
+                                <span className="size-1 rounded-full bg-primary-200/40" />
+                                <span className="text-[9px] font-black text-light-600 uppercase">
+                                    Gemini 1.5 Pro
+                                </span>
+                                <span className="size-1 rounded-full bg-primary-200/40" />
+                                <span className="text-[9px] font-black text-light-600 uppercase">
+                                    Vapi.ai
+                                </span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

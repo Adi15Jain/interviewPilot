@@ -169,6 +169,125 @@ export const feedbackSchema = z.object({
     finalAssessment: z.string(),
 });
 
+export interface InterviewDomain {
+    id: string;
+    name: string;
+    icon: string;
+    description: string;
+    popularRoles: string[];
+    techStacks: string[];
+}
+
+export const INTERVIEW_DOMAINS: InterviewDomain[] = [
+    {
+        id: "software",
+        name: "Software & Technology",
+        icon: "Code",
+        description: "Frontend, Backend, DevOps, Data Science, and more.",
+        popularRoles: [
+            "Frontend Developer",
+            "Backend Developer",
+            "Full Stack Developer",
+            "DevOps Engineer",
+            "Data Scientist",
+            "Mobile Developer (iOS/Android)",
+            "AI/ML Engineer",
+            "Cybersecurity Analyst",
+        ],
+        techStacks: [
+            "React, Next.js, TypeScript",
+            "Node.js, Express, MongoDB",
+            "Python, Django, PostgreSQL",
+            "Java, Spring Boot, AWS",
+            "Go, Kubernetes, Docker",
+            "Swift, SwiftUI, Firebase",
+            "Rust, WebAssembly",
+        ],
+    },
+    {
+        id: "medical",
+        name: "Medical & Healthcare",
+        icon: "Stethoscope",
+        description: "Nursing, General Practice, Specialized Medicine, etc.",
+        popularRoles: [
+            "Registered Nurse",
+            "General Practitioner",
+            "Medical Resident",
+            "Pharmacist",
+            "Radiologist",
+            "Surgical Assistant",
+            "Health Administrator",
+        ],
+        techStacks: [
+            "Clinical Protocols, Patient Care",
+            "EHR Systems, Medical Diagnosis",
+            "Pharmacology, Patient Safety",
+            "Medical Ethics, Emergency Response",
+        ],
+    },
+    {
+        id: "finance",
+        name: "Finance & Accounting",
+        icon: "TrendingUp",
+        description: "Banking, Investment, Audit, and Financial Planning.",
+        popularRoles: [
+            "Financial Analyst",
+            "Investment Banker",
+            "Auditor",
+            "Accountant",
+            "Tax Consultant",
+            "Risk Manager",
+            "Portfolio Manager",
+        ],
+        techStacks: [
+            "Financial Modeling, Excel",
+            "Market Analysis, Bloomberg Terminal",
+            "Tax Law, Audit Standards",
+            "Risk Assessment, Quantitative Analysis",
+        ],
+    },
+    {
+        id: "legal",
+        name: "Legal & Corporate Law",
+        icon: "Scale",
+        description: "Litigation, Corporate, Intellectual Property, etc.",
+        popularRoles: [
+            "Corporate Lawyer",
+            "Litigator",
+            "Legal Assistant",
+            "Paralegal",
+            "Compliance Officer",
+            "Patent Attorney",
+        ],
+        techStacks: [
+            "Case Law, Legal Research",
+            "Corporate Governance, Compliance",
+            "Contract Law, Intellectual Property",
+            "Jurisprudence, Legal Writing",
+        ],
+    },
+    {
+        id: "business",
+        name: "Business & Marketing",
+        icon: "Briefcase",
+        description: "Product, Sales, HR, and Digital Marketing.",
+        popularRoles: [
+            "Product Manager",
+            "Marketing Specialist",
+            "Sales Executive",
+            "HR Manager",
+            "Business Analyst",
+            "SEO Specialist",
+        ],
+        techStacks: [
+            "Product Strategy, Agile",
+            "Digital Marketing, SEO, SEM",
+            "B2B Sales, CRM (Salesforce)",
+            "Talent Acquisition, Employee Relations",
+        ],
+    },
+];
+
 export const interviewCovers = [
     "/adobe.png",
     "/amazon.png",

@@ -262,73 +262,60 @@
     }
 
     .root-layout {
-        @apply flex mx-auto max-w-7xl flex-col gap-12 pt-8 pb-12 px-16 max-sm:px-4 max-sm:py-8 transition-all duration-700;
+        @apply flex mx-auto max-w-7xl flex-col gap-8 pt-8 pb-12 px-10 max-sm:px-4 max-sm:py-8 transition-all duration-700;
     }
 
     .card-cta {
-        @apply flex flex-row blue-gradient-dark rounded-3xl px-16 py-6 items-center justify-between max-sm:px-4;
+        @apply flex flex-col lg:flex-row relative rounded-[2.5rem] px-12 py-16 items-center justify-between max-sm:px-6 overflow-hidden border border-white/10 shadow-[0_0_50px_rgba(202,197,254,0.1)];
+        background: linear-gradient(
+            135deg,
+            #020408 0%,
+            #0d0f1a 50%,
+            #020408 100%
+        );
     }
 
-    .interviews-section {
-        @apply flex flex-wrap gap-4 max-lg:flex-col w-full items-stretch;
+    .glass-card-extreme {
+        @apply bg-[#020408]/40 backdrop-blur-[40px] border border-white/10 shadow-2xl;
     }
 
-    .interview-text {
-        @apply text-lg text-center text-white;
+    .text-gradient-premium {
+        @apply bg-clip-text text-transparent bg-gradient-to-r from-primary-100 via-primary-200 to-white animate-text-gradient;
+        background-size: 200% auto;
     }
 
-    .progress {
-        @apply h-1.5 text-[5px] font-bold bg-primary-200 rounded-full flex-center;
-    }
-
-    .tech-tooltip {
-        @apply absolute bottom-full mb-1 hidden group-hover:flex px-2 py-1 text-xs text-white bg-gray-700 rounded-md shadow-md;
-    }
-
-    .card-interview {
-        @apply dark-gradient rounded-2xl min-h-full flex flex-col p-6 relative overflow-hidden gap-10 justify-between;
-
-        .badge-text {
-            @apply text-sm font-semibold capitalize;
-        }
+    .badge-institutional {
+        @apply inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary-200/10 border border-primary-200/20 text-[10px] font-black uppercase tracking-widest text-primary-200 mb-6;
     }
 }
 
-@utility dark-gradient {
-    @apply bg-gradient-to-b from-[#1A1C20] to-[#08090D];
+@utility animate-text-gradient {
+    animation: text-gradient 5s ease infinite;
 }
 
-@utility border-gradient {
-    @apply bg-gradient-to-b from-[#4B4D4F] to-[#4B4D4F33];
-}
-
-@utility pattern {
-    @apply bg-[url('/pattern.png')] bg-top bg-no-repeat;
-}
-
-@utility blue-gradient-dark {
-    @apply bg-gradient-to-b from-[#171532] to-[#08090D];
-}
-
-@utility blue-gradient {
-    @apply bg-gradient-to-l from-[#FFFFFF] to-[#CAC5FE];
-}
-
-@utility flex-center {
-    @apply flex items-center justify-center;
-}
-
-@utility animate-fadeIn {
-    animation: fadeIn 0.3s ease-in-out;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(5px);
+@keyframes text-gradient {
+    0% {
+        background-position: 0% 50%;
     }
-    to {
-        opacity: 1;
-        transform: translateY(0);
+    50% {
+        background-position: 100% 50%;
     }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+@utility mesh-gradient {
+    background-color: #020408;
+    background-image:
+        radial-gradient(
+            at 0% 0%,
+            rgba(202, 197, 254, 0.15) 0px,
+            transparent 50%
+        ),
+        radial-gradient(
+            at 100% 100%,
+            rgba(202, 197, 254, 0.1) 0px,
+            transparent 50%
+        );
 }
