@@ -5,6 +5,13 @@ import { google } from "@ai-sdk/google";
 
 import { prisma } from "@/lib/prisma";
 import { feedbackSchema } from "@/constants";
+import {
+    CreateFeedbackParams,
+    Interview,
+    GetFeedbackByInterviewIdParams,
+    Feedback,
+    GetLatestInterviewsParams,
+} from "@/types";
 
 export async function createFeedback(params: CreateFeedbackParams) {
     const { interviewId, userId, transcript, feedbackId } = params;

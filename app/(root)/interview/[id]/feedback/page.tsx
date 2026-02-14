@@ -10,6 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { getCurrentUser } from "@/lib/actions/auth.action";
 import SkillRadarChart from "@/components/SkillRadarChart";
+import { RouteParams } from "@/types";
 
 const Feedback = async ({ params }: RouteParams) => {
     const { id } = await params;

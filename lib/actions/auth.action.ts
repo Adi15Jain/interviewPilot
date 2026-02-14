@@ -10,6 +10,7 @@ import {
     SESSION_DURATION,
 } from "@/lib/auth";
 import { auth, signOut as nextAuthSignOut } from "@/lib/auth.config";
+import { User, SignInParams, SignUpParams } from "@/types";
 
 // Set session cookie (for credentials login fallback)
 export async function setSessionCookie(token: string) {

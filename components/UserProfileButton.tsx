@@ -2,16 +2,13 @@
 
 import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
-import { LogOut, User, ChevronDown } from "lucide-react";
+import { LogOut, User as UserIcon, ChevronDown } from "lucide-react";
 import { signOut as nextAuthSignOut } from "next-auth/react";
 import { signOut as customSignOut } from "@/lib/actions/auth.action";
+import type { User } from "@/types";
 
 interface UserProfileButtonProps {
-    user: {
-        name: string;
-        email: string;
-        image?: string;
-    };
+    user: User;
 }
 
 const UserProfileButton = ({ user }: UserProfileButtonProps) => {

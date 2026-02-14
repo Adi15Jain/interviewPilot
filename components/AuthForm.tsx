@@ -13,6 +13,7 @@ import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 
 import { signIn, signUp } from "@/lib/actions/auth.action";
+import { FormType } from "@/types";
 import FormField from "./FormField";
 
 const authFormSchema = (type: FormType) => {

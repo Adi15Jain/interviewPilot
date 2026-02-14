@@ -7,7 +7,6 @@ import InterviewCard from "@/components/InterviewCard";
 import { getCurrentUser } from "@/lib/actions/auth.action";
 import {
     getInterviewsByUserId,
-    getLatestInterviews,
     getFeedbacksByUserId,
 } from "@/lib/actions/general.action";
 import ScoreTrendChart from "@/components/ScoreTrendChart";
@@ -16,14 +15,12 @@ import CategoryProgress from "@/components/CategoryProgress";
 async function Home() {
     const user = await getCurrentUser();
 
-    const [userInterviews, allInterview, feedbacks] = await Promise.all([
+    const [userInterviews, feedbacks] = await Promise.all([
         getInterviewsByUserId(user?.id!),
-        getLatestInterviews({ userId: user?.id! }),
         getFeedbacksByUserId(user?.id!),
     ]);
 
     const hasPastInterviews = userInterviews?.length! > 0;
-    const hasUpcomingInterviews = allInterview?.length! > 0;
 
     // Process Trend Data
     const trendData =
@@ -107,28 +104,6 @@ async function Home() {
                         ))
                     ) : (
                         <p>You haven&apos;t taken any interviews yet</p>
-                    )}
-                </div>
-            </section>
-
-            <section className="flex flex-col gap-6 mt-8">
-                <h2>Take Interviews</h2>
-
-                <div className="interviews-section">
-                    {hasUpcomingInterviews ? (
-                        allInterview?.map((interview) => (
-                            <InterviewCard
-                                key={interview.id}
-                                userId={user?.id}
-                                interviewId={interview.id}
-                                role={interview.role}
-                                type={interview.type}
-                                techstack={interview.techstack}
-                                createdAt={interview.createdAt}
-                            />
-                        ))
-                    ) : (
-                        <p>There are no interviews available</p>
                     )}
                 </div>
             </section>

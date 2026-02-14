@@ -1,21 +1,20 @@
-import { ReactNode } from "react";
 import { redirect } from "next/navigation";
-
-import { isAuthenticated } from "@/lib/actions/auth.action";
-
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+import { getCurrentUser } from "@/lib/actions/auth.action";
 
-const Layout = async ({ children }: { children: ReactNode }) => {
-    const isUserAuthenticated = await isAuthenticated();
-    if (!isUserAuthenticated) redirect("/sign-in");
+const RootLayout = async ({ children }: { children: React.ReactNode }) => {
+    const user = await getCurrentUser();
+
+    if (!user) redirect("/sign-in");
 
     return (
-        <div className="root-layout">
+        <main className="root-layout pattern">
             <Navbar />
-
             {children}
-        </div>
+            <Footer />
+        </main>
     );
 };
 
-export default Layout;
+export default RootLayout;
