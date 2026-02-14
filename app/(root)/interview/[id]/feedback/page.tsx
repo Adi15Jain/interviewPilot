@@ -43,7 +43,7 @@ const Feedback = async ({ params }: RouteParams) => {
                     <div className="flex flex-col gap-4">
                         <Link
                             href="/"
-                            className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-light-100/60 hover:text-primary-200 transition-colors w-fit group"
+                            className="flex items-center gap-2 text-sm font-black uppercase tracking-[0.2em] text-light-100/60 hover:text-primary-200 transition-colors w-fit group"
                         >
                             <ChevronLeft className="size-3 group-hover:-translate-x-1 transition-transform" />
                             Return to Mission Control
@@ -52,7 +52,7 @@ const Feedback = async ({ params }: RouteParams) => {
                             Performance{" "}
                             <span className="text-primary-200">Analysis</span>
                         </h1>
-                        <div className="flex flex-wrap items-center gap-y-2 gap-x-6 text-[10px] font-black uppercase tracking-[0.2em] text-light-100/40">
+                        <div className="flex flex-wrap items-center gap-y-2 gap-x-6 text-xs font-black uppercase tracking-[0.2em] text-light-100/40">
                             <span className="text-light-100">
                                 {interview.role}
                             </span>
@@ -70,13 +70,13 @@ const Feedback = async ({ params }: RouteParams) => {
                     <div className="flex items-center gap-4">
                         <Button
                             asChild
-                            className="h-11 px-6 bg-white/10 border border-white/20 hover:bg-white/20 text-[10px] font-black uppercase tracking-widest transition-all glass-morphism rounded-xl text-white shadow-lg shadow-black/20"
+                            className="h-11 px-6 bg-white/10 border border-white/20 hover:bg-white/20 text-xs font-black uppercase tracking-widest transition-all glass-morphism rounded-xl text-white shadow-lg shadow-black/20"
                         >
                             <Link href="/">Dashboard</Link>
                         </Button>
                         <Button
                             asChild
-                            className="h-11 px-6 bg-primary-200 text-black hover:bg-white text-[10px] font-black uppercase tracking-widest transition-all rounded-xl shadow-[0_0_30px_rgba(202,197,254,0.3)]"
+                            className="h-11 px-6 bg-primary-200 text-black hover:bg-white text-xs font-black uppercase tracking-widest transition-all rounded-xl shadow-[0_0_30px_rgba(202,197,254,0.3)]"
                         >
                             <Link
                                 href={`/interview/${id}`}
@@ -109,7 +109,7 @@ const Feedback = async ({ params }: RouteParams) => {
                     <div className="p-10 md:p-14 rounded-[3rem] bg-gradient-to-br from-primary-500/10 via-primary-500/[0.02] to-transparent border border-primary-500/10 relative overflow-hidden group">
                         <Quote className="absolute -top-6 -left-6 size-32 text-primary-500/5 -rotate-12 transition-transform group-hover:rotate-0 duration-1000" />
                         <div className="relative flex flex-col gap-6">
-                            <h3 className="text-[10px] font-black uppercase tracking-[0.5em] text-primary-200">
+                            <h3 className="text-xs font-black uppercase tracking-[0.5em] text-primary-200">
                                 Strategic Assessment
                             </h3>
                             <p className="text-xl md:text-2xl font-bold text-light-100 leading-tight tracking-tight">
@@ -117,7 +117,7 @@ const Feedback = async ({ params }: RouteParams) => {
                             </p>
                             <div className="flex items-center gap-3 mt-2">
                                 <div className="size-1.5 rounded-full bg-primary-200 animate-pulse" />
-                                <span className="text-[10px] font-black uppercase tracking-widest text-light-600">
+                                <span className="text-xs font-black uppercase tracking-widest text-light-600">
                                     AI Evaluator • Gemini Flash Engine 2.0
                                 </span>
                             </div>

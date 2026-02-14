@@ -33,7 +33,7 @@ const FeedbacksPage = async () => {
                         />
                     ))
                 ) : (
-                    <div className="flex flex-col items-center justify-center py-20 bg-dark-200/50 rounded-3xl border border-dashed border-light-800 w-full">
+                    <div className="flex flex-col items-center justify-center py-10 bg-dark-200/50 rounded-3xl border border-dashed border-light-800 w-full">
                         <p className="text-lg">
                             You haven't received any feedback yet.
                         </p>

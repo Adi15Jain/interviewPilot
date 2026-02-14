@@ -37,7 +37,7 @@ const InsightCard = ({ title, items, type }: InsightCardProps) => {
                 >
                     <Icon className="size-6" />
                 </div>
-                <h3 className="text-sm font-black uppercase tracking-[0.3em] text-white">
+                <h3 className="text-base font-black uppercase tracking-[0.3em] text-white">
                     {title}
                 </h3>
             </div>
@@ -52,7 +52,7 @@ const InsightCard = ({ title, items, type }: InsightCardProps) => {
                                     : "bg-amber-500/40"
                             }`}
                         />
-                        <p className="text-sm font-medium text-light-600 leading-relaxed group-hover/item:text-light-100 transition-colors">
+                        <p className="text-base font-medium text-light-600 leading-relaxed group-hover/item:text-light-100 transition-colors">
                             {item}
                         </p>
                     </li>

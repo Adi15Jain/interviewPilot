@@ -2,7 +2,7 @@ import { generateText } from "ai";
 import { google } from "@ai-sdk/google";
 
 import { prisma } from "@/lib/prisma";
-import { getRandomInterviewCover } from "@/lib/utils";
+import { getInterviewCover } from "@/lib/utils";
 
 export async function POST(request: Request) {
     try {
@@ -137,7 +137,7 @@ export async function POST(request: Request) {
                 questions: questions,
                 userId: userid,
                 finalized: true,
-                coverImage: getRandomInterviewCover(),
+                coverImage: getInterviewCover("", role.trim()), // Will be updated by ID if needed, or use role
             },
         });
 

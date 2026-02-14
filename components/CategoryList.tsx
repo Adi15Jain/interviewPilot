@@ -47,11 +47,11 @@ const CategoryItem = ({
                     <div className="p-2 rounded-xl bg-primary-500/10 text-primary-200 group-hover:scale-110 transition-transform">
                         <Icon className="size-4" />
                     </div>
-                    <span className="text-xs font-black uppercase tracking-widest text-white/90">
+                    <span className="text-sm font-black uppercase tracking-widest text-white/90">
                         {category.name}
                     </span>
                 </div>
-                <span className="text-sm font-black text-primary-200 tracking-tight">
+                <span className="text-base font-black text-primary-200 tracking-tight">
                     {category.score}/100
                 </span>
             </div>
@@ -66,7 +66,7 @@ const CategoryItem = ({
                 </div>
             </div>
 
-            <p className="text-[11px] leading-relaxed text-light-600 font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+            <p className="text-sm leading-relaxed text-light-600 font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-500">
                 {category.comment}
             </p>
         </div>
@@ -76,7 +76,7 @@ const CategoryItem = ({
 const CategoryList = ({ categories }: CategoryListProps) => {
     return (
         <div className="flex flex-col gap-4">
-            <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-light-600 mb-2 pl-2">
+            <h3 className="text-xs font-black uppercase tracking-[0.4em] text-light-600 mb-2 pl-2">
                 Categorical Breakdown
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

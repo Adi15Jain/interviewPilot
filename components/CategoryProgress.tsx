@@ -12,7 +12,7 @@ interface CategoryProgressProps {
 const CategoryProgress = ({ categories }: CategoryProgressProps) => {
     return (
         <div className="w-full flex flex-col h-full">
-            <h4 className="text-xs font-black text-light-600 uppercase tracking-[0.3em] mb-8">
+            <h4 className="text-sm font-black text-light-600 uppercase tracking-[0.3em] mb-8">
                 Industry Proficiency
             </h4>
             <div className="flex flex-col gap-6">
@@ -23,10 +23,10 @@ const CategoryProgress = ({ categories }: CategoryProgressProps) => {
                             className="flex flex-col gap-3 group/item"
                         >
                             <div className="flex justify-between items-end">
-                                <span className="text-sm font-bold text-light-100 group-hover/item:text-primary-200 transition-colors">
+                                <span className="text-base font-bold text-light-100 group-hover/item:text-primary-200 transition-colors">
                                     {cat.name}
                                 </span>
-                                <span className="text-[10px] font-black text-primary-200">
+                                <span className="text-xs font-black text-primary-200">
                                     {cat.score}%
                                 </span>
                             </div>
