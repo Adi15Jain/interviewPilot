@@ -75,9 +75,9 @@ const UserProfileButton = ({ user }: UserProfileButtonProps) => {
 
             {/* Dropdown */}
             {isOpen && (
-                <div className="absolute right-0 top-full mt-2 w-72 rounded-2xl bg-dark-200 border border-dark-300 shadow-2xl shadow-black/40 z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+                <div className="absolute right-0 top-full mt-3 w-72 rounded-2xl bg-[#020408]/60 backdrop-blur-xl border border-white/10 shadow-2xl shadow-black/80 z-50 overflow-hidden animate-in fade-in slide-in-from-top-3 duration-300 ring-1 ring-white/5">
                     {/* User Info Section */}
-                    <div className="p-5 border-b border-dark-300">
+                    <div className="p-5 border-b border-white/5">
                         <div className="flex items-center gap-3.5">
                             {user.image ? (
                                 <Image
@@ -109,9 +109,9 @@ const UserProfileButton = ({ user }: UserProfileButtonProps) => {
                     <div className="p-2">
                         <button
                             onClick={handleLogout}
-                            className="flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-light-100 hover:bg-dark-300 hover:text-white transition-all cursor-pointer group"
+                            className="flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-light-100 hover:bg-white/5 hover:text-white transition-all cursor-pointer group"
                         >
-                            <LogOut className="size-4 text-light-400 group-hover:text-red-400 transition-colors" />
+                            <LogOut className="size-4 text-light-400 group-hover:text-primary-200 transition-colors" />
                             <span className="text-sm font-medium">
                                 Sign out
                             </span>
