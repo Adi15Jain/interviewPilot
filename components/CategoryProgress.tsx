@@ -1,7 +1,5 @@
 "use client";
 
-import { Progress } from "@/components/ui/progress";
-
 interface CategoryProgressProps {
     categories: Array<{
         name: string;

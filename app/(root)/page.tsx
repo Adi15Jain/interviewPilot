@@ -135,7 +135,7 @@ const Home = async () => {
                                 <h2 className="text-4xl font-black text-white tracking-tight">
                                     Performance Overview
                                 </h2>
-                                <p className="text-sm text-light-400">
+                                <p className="text-md text-light-400">
                                     Track your progress and proficiency levels
                                     across different technologies.
                                 </p>
@@ -155,10 +155,10 @@ const Home = async () => {
                 <section className="flex flex-col gap-8 animate-in slide-in-from-bottom-12 duration-1000">
                     <div className="flex items-end justify-between border-b border-white/5 pb-6">
                         <div className="flex flex-col gap-1">
-                            <h2 className="text-3xl font-black text-white tracking-tight">
+                            <h2 className="text-4xl font-black text-white tracking-tight">
                                 Your Interviews
                             </h2>
-                            <p className="text-sm text-light-400">
+                            <p className="text-md text-light-400">
                                 Manage and review your past interview
                                 simulations and performance feedback.
                             </p>
