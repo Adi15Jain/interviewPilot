@@ -93,7 +93,7 @@ const Home = async () => {
                                 href="/interview"
                                 className="flex items-center gap-2"
                             >
-                                <span>Get Started Practice</span>
+                                <span>Take Interview</span>
                                 <ChevronRight className="size-5" />
                             </Link>
                         </Button>

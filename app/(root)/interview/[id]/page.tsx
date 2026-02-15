@@ -27,9 +27,9 @@ const InterviewDetails = async ({ params }: RouteParams) => {
     });
 
     return (
-        <>
-            <div className="flex flex-row gap-4 justify-between">
-                <div className="flex flex-row gap-4 items-center max-sm:flex-col">
+        <div className="flex flex-col gap-8 w-full animate-in fade-in slide-in-from-bottom-8 duration-[1500ms]">
+            <header className="flex flex-row gap-4 justify-between items-center opacity-70 hover:opacity-100 transition-opacity duration-300">
+                <div className="flex flex-row gap-4 items-center">
                     <div className="flex flex-row gap-4 items-center">
                         <Image
                             src={getInterviewCover(
@@ -37,32 +37,43 @@ const InterviewDetails = async ({ params }: RouteParams) => {
                                 interview.role,
                             )}
                             alt="cover-image"
-                            width={40}
-                            height={40}
-                            className="rounded-full object-cover size-[40px]"
+                            width={32}
+                            height={32}
+                            className="rounded-full object-cover size-[32px] border border-white/10"
                         />
-                        <h3 className="capitalize">
+                        <h1 className="text-3xl font-medium capitalize text-white">
                             {interview.role} Interview
-                        </h3>
+                        </h1>
                     </div>
 
-                    <DisplayTechIcons techStack={interview.techstack} />
+                    <div className="hidden md:block">
+                        <DisplayTechIcons techStack={interview.techstack} />
+                    </div>
                 </div>
 
-                <p className="bg-dark-200 px-4 py-2 rounded-lg h-fit">
-                    {interview.type}
-                </p>
-            </div>
+                <div className="flex items-center gap-3">
+                    <span className="px-3 py-1 bg-dark-200/50 border border-white/10 rounded-full text-xs font-medium text-light-400 capitalize">
+                        {interview.type}
+                    </span>
+                    <div className="flex items-center gap-2 px-3 py-1 bg-success-100/10 border border-success-100/20 rounded-full">
+                        <span className="size-2 bg-success-100 rounded-full animate-pulse" />
+                        <span className="text-xs font-medium text-success-100 uppercase tracking-wider">
+                            Live
+                        </span>
+                    </div>
+                </div>
+            </header>
 
             <Agent
                 userName={user.name}
                 userId={user.id}
+                profileImage={user.image}
                 interviewId={id}
                 type="interview"
                 questions={interview.questions}
                 feedbackId={feedback?.id}
             />
-        </>
+        </div>
     );
 };
 
