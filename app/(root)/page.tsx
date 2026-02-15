@@ -9,14 +9,7 @@ import {
     getInterviewsByUserId,
     getFeedbacksByUserId,
 } from "@/lib/actions/general.action";
-import {
-    Briefcase,
-    ChevronRight,
-    Code,
-    Scale,
-    Sparkles,
-    TrendingUp,
-} from "lucide-react";
+import { ChevronRight, Sparkles } from "lucide-react";
 import ScoreTrendChart from "@/components/ScoreTrendChart";
 import CategoryProgress from "@/components/CategoryProgress";
 
@@ -139,7 +132,7 @@ const Home = async () => {
                     <section className="flex flex-col gap-8 animate-in slide-in-from-bottom-8 duration-700">
                         <div className="flex items-end justify-between border-b border-white/5 pb-6">
                             <div className="flex flex-col gap-1">
-                                <h2 className="text-3xl font-black text-white tracking-tight">
+                                <h2 className="text-4xl font-black text-white tracking-tight">
                                     Performance Overview
                                 </h2>
                                 <p className="text-sm text-light-400">

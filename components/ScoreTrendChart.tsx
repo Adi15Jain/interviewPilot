@@ -51,7 +51,7 @@ const ScoreTrendChart = ({ data }: ScoreTrendChartProps) => {
 
     return (
         <div className="w-full h-[320px] flex flex-col relative group/chart">
-            <h4 className="text-xs font-black text-light-600 uppercase tracking-[0.3em] mb-8 relative z-10 transition-colors group-hover/chart:text-primary-200">
+            <h4 className="text-sm font-black text-light-600 uppercase tracking-[0.3em] mb-8 relative z-10 transition-colors group-hover/chart:text-primary-200">
                 Performance Trajectory
             </h4>
 

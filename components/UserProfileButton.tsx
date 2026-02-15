@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { LogOut, User as UserIcon, ChevronDown } from "lucide-react";
+import Link from "next/link";
 import { signOut as nextAuthSignOut } from "next-auth/react";
 import { signOut as customSignOut } from "@/lib/actions/auth.action";
 import type { User } from "@/types";
@@ -106,7 +107,18 @@ const UserProfileButton = ({ user }: UserProfileButtonProps) => {
                     </div>
 
                     {/* Actions */}
-                    <div className="p-2">
+                    <div className="p-2 flex flex-col gap-1">
+                        <Link
+                            href="/profile"
+                            onClick={() => setIsOpen(false)}
+                            className="flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-light-100 hover:bg-white/5 hover:text-white transition-all cursor-pointer group"
+                        >
+                            <UserIcon className="size-4 text-light-400 group-hover:text-primary-200 transition-colors" />
+                            <span className="text-sm font-medium">
+                                View Profile
+                            </span>
+                        </Link>
+
                         <button
                             onClick={handleLogout}
                             className="flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-light-100 hover:bg-white/5 hover:text-white transition-all cursor-pointer group"
