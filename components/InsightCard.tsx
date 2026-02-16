@@ -14,7 +14,7 @@ const InsightCard = ({ title, items, type }: InsightCardProps) => {
 
     return (
         <div
-            className={`flex flex-col gap-6 p-8 rounded-[2.5rem] border backdrop-blur-xl transition-all duration-500 group relative overflow-hidden ${
+            className={`flex flex-col gap-6 p-8 rounded-[2.5rem] border backdrop-blur-xl transition-all duration-500 group relative ${
                 isStrength
                     ? "bg-green-500/[0.02] border-green-500/10 hover:border-green-500/30"
                     : "bg-amber-500/[0.02] border-amber-500/10 hover:border-amber-500/30"

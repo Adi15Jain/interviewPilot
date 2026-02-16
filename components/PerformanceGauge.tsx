@@ -55,17 +55,29 @@ const PerformanceGauge = ({ score }: PerformanceGaugeProps) => {
                         cx="50"
                         cy="50"
                         r="45"
-                        stroke="currentColor"
+                        stroke="url(#gauge-gradient)"
                         strokeWidth="8"
                         strokeDasharray={circumference}
                         strokeDashoffset={offset}
                         strokeLinecap="round"
                         fill="transparent"
-                        className="text-primary-200 transition-all duration-1000 ease-out"
+                        className="transition-all duration-1000 ease-out"
                         style={{
-                            filter: "drop-shadow(0 0 8px rgba(202, 197, 254, 0.4))",
+                            filter: "drop-shadow(0 0 12px rgba(202, 197, 254, 0.6))",
                         }}
                     />
+                    <defs>
+                        <linearGradient
+                            id="gauge-gradient"
+                            x1="0%"
+                            y1="0%"
+                            x2="100%"
+                            y2="0%"
+                        >
+                            <stop offset="0%" stopColor="#CAC5FE" />
+                            <stop offset="100%" stopColor="#7C71FF" />
+                        </linearGradient>
+                    </defs>
                 </svg>
 
                 {/* Center Content */}

@@ -66,7 +66,7 @@ const CategoryItem = ({
                 </div>
             </div>
 
-            <p className="text-sm leading-relaxed text-light-600 font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+            <p className="text-sm leading-relaxed text-light-600 font-medium">
                 {category.comment}
             </p>
         </div>

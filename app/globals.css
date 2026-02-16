@@ -302,6 +302,10 @@
     @apply bg-gradient-to-b from-[#4B4D4F] to-[#4B4D4F33];
 }
 
+@utility glass-card-extreme {
+    @apply bg-white/[0.03] border border-white/10 backdrop-blur-2xl shadow-2xl;
+}
+
 @utility pattern {
     @apply bg-[url('/pattern.png')] bg-top bg-no-repeat;
 }
