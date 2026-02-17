@@ -4,7 +4,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import InterviewCard from "@/components/InterviewCard";
 
-import { getCurrentUser } from "@/lib/actions/auth.action";
+import { getCurrentUser, getRandomUsers } from "@/lib/actions/auth.action";
 import {
     getInterviewsByUserId,
     getFeedbacksByUserId,
@@ -16,9 +16,10 @@ import CategoryProgress from "@/components/CategoryProgress";
 const Home = async () => {
     const user = await getCurrentUser();
 
-    const [userInterviews, feedbacks] = await Promise.all([
+    const [userInterviews, feedbacks, randomUsers] = await Promise.all([
         getInterviewsByUserId(user?.id!),
         getFeedbacksByUserId(user?.id!),
+        getRandomUsers(4),
     ]);
 
     const hasPastInterviews = userInterviews?.length! > 0;
@@ -91,20 +92,37 @@ const Home = async () => {
                             </Link>
                         </Button>
                         <div className="flex -space-x-3 items-center ml-2">
-                            {[1, 2, 3, 4].map((i) => (
-                                <div
-                                    key={i}
-                                    className="size-10 rounded-full border-2 border-dark-100 bg-dark-200 flex items-center justify-center overflow-hidden transition-transform hover:scale-110 hover:z-20"
-                                >
-                                    <Image
-                                        src={`/user-avatar.png`}
-                                        alt="User"
-                                        width={40}
-                                        height={40}
-                                        className="opacity-80"
-                                    />
-                                </div>
-                            ))}
+                            {randomUsers.length > 0
+                                ? randomUsers.map((u) => (
+                                      <div
+                                          key={u.id}
+                                          className="size-10 rounded-full border-2 border-dark-100 bg-dark-200 flex items-center justify-center overflow-hidden transition-transform hover:scale-110 hover:z-20"
+                                      >
+                                          <Image
+                                              src={
+                                                  u.image || `/user-avatar.png`
+                                              }
+                                              alt={u.name || "User"}
+                                              width={40}
+                                              height={40}
+                                              className="opacity-80 object-cover aspect-square"
+                                          />
+                                      </div>
+                                  ))
+                                : [1, 2, 3, 4].map((i) => (
+                                      <div
+                                          key={i}
+                                          className="size-10 rounded-full border-2 border-dark-100 bg-dark-200 flex items-center justify-center overflow-hidden transition-transform hover:scale-110 hover:z-20"
+                                      >
+                                          <Image
+                                              src={`/user-avatar.png`}
+                                              alt="User"
+                                              width={40}
+                                              height={40}
+                                              className="opacity-80"
+                                          />
+                                      </div>
+                                  ))}
                             <span className="ml-6 text-xs font-bold text-light-600 uppercase tracking-widest">
                                 Trusted by 500+ Students
                             </span>

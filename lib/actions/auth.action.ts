@@ -177,3 +177,27 @@ export async function isAuthenticated() {
     const user = await getCurrentUser();
     return !!user;
 }
+
+// Get random users with images
+export async function getRandomUsers(limit: number = 4): Promise<User[]> {
+    try {
+        // Fetch random users who have an image
+        const users = await prisma.$queryRaw<any[]>`
+            SELECT id, name, email, image, "profileURL"
+            FROM users
+            WHERE image IS NOT NULL OR "profileURL" IS NOT NULL
+            ORDER BY RANDOM()
+            LIMIT ${limit}
+        `;
+
+        return users.map((user) => ({
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            image: user.image || user.profileURL || undefined,
+        }));
+    } catch (error) {
+        console.error("Error getting random users:", error);
+        return [];
+    }
+}
