@@ -69,6 +69,7 @@ export interface InterviewCardProps {
     type: string;
     techstack: string[];
     createdAt?: string;
+    feedback?: Feedback | null;
 }
 
 export interface AgentProps {

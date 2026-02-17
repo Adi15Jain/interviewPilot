@@ -55,15 +55,15 @@ const NavbarClient = ({ user, UserProfileButton }: NavbarClientProps) => {
                         />
                     </Link>
                     <Link
-                        href="/feedback"
+                        href="/history"
                         className={`relative text-light-100 hover:text-white transition-all duration-300 font-semibold group ${
-                            isActive("/feedback") ? "text-white" : ""
+                            isActive("/history") ? "text-white" : ""
                         }`}
                     >
-                        Feedbacks
+                        History
                         <span
                             className={`absolute -bottom-1 left-0 h-0.5 bg-primary-200 transition-all duration-500 shadow-[0_0_10px_rgba(202,197,254,0.8)] ${
-                                isActive("/feedback")
+                                isActive("/history")
                                     ? "w-full"
                                     : "w-0 group-hover:w-full"
                             }`}

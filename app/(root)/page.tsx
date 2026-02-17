@@ -163,31 +163,40 @@ const Home = async () => {
                                 simulations and performance feedback.
                             </p>
                         </div>
-                        <Button
-                            variant="ghost"
-                            className="text-primary-200 hover:text-white transition-colors font-bold text-sm"
-                        >
-                            View All History
-                        </Button>
+                        <Link href="/history">
+                            <Button
+                                variant="ghost"
+                                className="text-primary-200 hover:text-white transition-colors font-bold text-sm"
+                            >
+                                View All History
+                            </Button>
+                        </Link>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {hasPastInterviews ? (
-                            userInterviews?.map((interview) => (
-                                <div
-                                    key={interview.id}
-                                    className="transition-all hover:scale-[1.02] hover:-translate-y-1"
-                                >
-                                    <InterviewCard
-                                        userId={user?.id}
-                                        interviewId={interview.id}
-                                        role={interview.role}
-                                        type={interview.type}
-                                        techstack={interview.techstack}
-                                        createdAt={interview.createdAt}
-                                    />
-                                </div>
-                            ))
+                            userInterviews?.map((interview) => {
+                                const feedback = feedbacks?.find(
+                                    (f) => f.interviewId === interview.id,
+                                );
+
+                                return (
+                                    <div
+                                        key={interview.id}
+                                        className="transition-all hover:scale-[1.02] hover:-translate-y-1"
+                                    >
+                                        <InterviewCard
+                                            interviewId={interview.id}
+                                            userId={user?.id!}
+                                            role={interview.role}
+                                            type={interview.type}
+                                            techstack={interview.techstack}
+                                            createdAt={interview.createdAt}
+                                            feedback={feedback}
+                                        />
+                                    </div>
+                                );
+                            })
                         ) : (
                             <div className="col-span-full py-10 flex flex-col items-center justify-center gap-4 glass-card-extreme rounded-[2rem] border-dashed border-white/10">
                                 <div className="p-4 bg-white/5 rounded-full">

@@ -30,6 +30,7 @@ const FeedbacksPage = async () => {
                             type={feedback.interview.type}
                             techstack={feedback.interview.techstack}
                             createdAt={feedback.createdAt}
+                            feedback={feedback}
                         />
                     ))
                 ) : (

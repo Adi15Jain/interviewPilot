@@ -224,17 +224,24 @@ const ProfilePage = async () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {interviews && interviews.length > 0 ? (
-                        interviews.map((interview) => (
-                            <InterviewCard
-                                key={interview.id}
-                                userId={user.id}
-                                interviewId={interview.id}
-                                role={interview.role}
-                                type={interview.type}
-                                techstack={interview.techstack}
-                                createdAt={interview.createdAt}
-                            />
-                        ))
+                        interviews.map((interview) => {
+                            const feedback = feedbacks?.find(
+                                (f) => f.interviewId === interview.id,
+                            );
+
+                            return (
+                                <InterviewCard
+                                    key={interview.id}
+                                    userId={user.id}
+                                    interviewId={interview.id}
+                                    role={interview.role}
+                                    type={interview.type}
+                                    techstack={interview.techstack}
+                                    createdAt={interview.createdAt}
+                                    feedback={feedback}
+                                />
+                            );
+                        })
                     ) : (
                         <div className="col-span-full py-16 flex flex-col items-center justify-center gap-6 glass-card rounded-[2.5rem] border-dashed border-white/10">
                             <div className="p-6 bg-white/5 rounded-full ring-1 ring-white/10">
