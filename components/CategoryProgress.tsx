@@ -10,7 +10,7 @@ interface CategoryProgressProps {
 const CategoryProgress = ({ categories }: CategoryProgressProps) => {
     return (
         <div className="w-full flex flex-col h-full">
-            <h4 className="text-sm font-black text-light-600 uppercase tracking-[0.3em] mb-8 relative z-10 transition-colors group-hover/chart:text-primary-200">
+            <h4 className="text-sm font-black text-light-600 uppercase tracking-[0.3em] mb-8 relative z-10 transition-colors group-hover:text-primary-200">
                 Industry Proficiency
             </h4>
             <div className="flex flex-col gap-6">
