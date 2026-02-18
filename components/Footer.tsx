@@ -12,7 +12,7 @@ const Footer = () => {
                     <div className="flex flex-col gap-6 md:col-span-2">
                         <div className="flex flex-col gap-2">
                             <div className="flex items-center gap-2 group/logo w-fit">
-                                <h3 className="text-2xl font-black text-white tracking-tighter transition-all duration-300 group-hover/logo:text-primary-200">
+                                <h3 className="text-3xl font-black text-white tracking-tighter transition-all duration-300 group-hover/logo:text-primary-200">
                                     InterviewPilot
                                     <span className="text-primary-200 group-hover/logo:text-white transition-colors">
                                         .
@@ -20,13 +20,13 @@ const Footer = () => {
                                 </h3>
                             </div>
                             <div className="flex flex-col gap-1">
-                                <p className="text-primary-200/80 text-[10px] font-black uppercase tracking-[0.2em]">
+                                <p className="text-primary-200/80 text-[12px] font-black uppercase tracking-[0.2em]">
                                     A Final Year Major Project
                                 </p>
                                 <p className="text-light-100 text-sm font-bold uppercase tracking-tight">
                                     College of Computing Sciences & IT
                                 </p>
-                                <p className="text-light-400 text-xs font-semibold">
+                                <p className="text-light-400 text-sm font-semibold">
                                     Teerthanker Mahaveer University, Moradabad
                                 </p>
                             </div>
@@ -41,7 +41,7 @@ const Footer = () => {
 
                     {/* Quick Access */}
                     <div className="flex flex-col gap-6">
-                        <h4 className="text-[10px] font-black text-white uppercase tracking-[0.3em] opacity-50">
+                        <h4 className="text-[12px] font-black text-white uppercase tracking-[0.3em] opacity-50">
                             Navigation
                         </h4>
                         <div className="flex flex-col gap-3">
@@ -64,7 +64,7 @@ const Footer = () => {
 
                     {/* Team Section */}
                     <div className="flex flex-col gap-6">
-                        <h4 className="text-[10px] font-black text-white uppercase tracking-[0.3em] opacity-50">
+                        <h4 className="text-[12px] font-black text-white uppercase tracking-[0.3em] opacity-50">
                             Development Team
                         </h4>
                         <div className="flex flex-col gap-5">
@@ -105,14 +105,14 @@ const Footer = () => {
                                                 target="_blank"
                                                 className="text-light-600 hover:text-primary-200 transition-colors"
                                             >
-                                                <Github className="size-3.5" />
+                                                <Github className="size-4.5" />
                                             </a>
                                             <a
                                                 href={creator.linkedin}
                                                 target="_blank"
                                                 className="text-light-600 hover:text-primary-200 transition-colors"
                                             >
-                                                <Linkedin className="size-3.5" />
+                                                <Linkedin className="size-4.5" />
                                             </a>
                                         </div>
                                     </div>

@@ -6,15 +6,27 @@ import { google } from "@ai-sdk/google";
 import { prisma } from "@/lib/prisma";
 import { feedbackSchema } from "@/constants";
 import {
-    CreateFeedbackParams,
-    Interview,
-    GetFeedbackByInterviewIdParams,
     Feedback,
     GetLatestInterviewsParams,
+    Interview,
+    GetFeedbackByInterviewIdParams,
 } from "@/types";
 
+export interface CreateFeedbackParams {
+    interviewId: string;
+    userId: string;
+    transcript: { role: string; content: string }[];
+    feedbackId?: string;
+    emotionalData?: {
+        confidence: number;
+        eyeContact: number;
+        timestamp: number;
+    }[];
+}
+
 export async function createFeedback(params: CreateFeedbackParams) {
-    const { interviewId, userId, transcript, feedbackId } = params;
+    const { interviewId, userId, transcript, feedbackId, emotionalData } =
+        params;
 
     try {
         const formattedTranscript = transcript
@@ -24,6 +36,14 @@ export async function createFeedback(params: CreateFeedbackParams) {
             )
             .join("");
 
+        const emotionalContext =
+            emotionalData && emotionalData.length > 0
+                ? `\nBehavioral Data:
+               - Average Eye Contact: ${((emotionalData.reduce((acc: number, curr: any) => acc + curr.eyeContact, 0) / emotionalData.length) * 100).toFixed(1)}%
+               - Confidence Trend: ${emotionalData.map((d: any) => d.confidence.toFixed(2)).join(", ")}
+               Use this data to provide specific "Body Language Coaching" tips in the 'behavioralTips' array.`
+                : "";
+
         const { object } = await generateObject({
             model: google("gemini-2.0-flash"),
             schema: feedbackSchema,
@@ -31,6 +51,7 @@ export async function createFeedback(params: CreateFeedbackParams) {
         You are an AI interviewer analyzing a mock interview. Your task is to evaluate the candidate based on structured categories. Be thorough and detailed in your analysis. Don't be lenient with the candidate. If there are mistakes or areas for improvement, point them out.
         Transcript:
         ${formattedTranscript}
+        ${emotionalContext}
 
         Please score the candidate from 0 to 100 in the following areas. Do not add categories other than the ones provided:
         - **Communication Skills**: Clarity, articulation, structured responses.
@@ -50,6 +71,8 @@ export async function createFeedback(params: CreateFeedbackParams) {
             strengths: object.strengths,
             areasForImprovement: object.areasForImprovement,
             finalAssessment: object.finalAssessment,
+            emotionalAnalysis: emotionalData || [],
+            behavioralTips: (object as any).behavioralTips || [], // We expect Gemini to fill this based on the prompt advice if we update schema
         };
 
         let feedback;

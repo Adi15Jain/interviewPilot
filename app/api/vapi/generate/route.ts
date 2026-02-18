@@ -13,17 +13,18 @@ export async function POST(request: Request) {
             level: requestBody.level,
         });
 
-        const { type, role, level, techstack, amount, userid } = requestBody;
+        const { type, role, level, techstack, amount, userid, jobDescription } =
+            requestBody as {
+                type: string;
+                role: string;
+                level: string;
+                techstack: string | string[];
+                amount: string;
+                userid: string;
+                jobDescription?: string;
+            };
 
-        // Validate required fields
-        if (!type || !role || !level || !techstack || !amount || !userid) {
-            return Response.json(
-                { success: false, error: "Missing required fields" },
-                { status: 400 },
-            );
-        }
-
-        // Validate amount is a number
+        // Validate amount
         const questionAmount = parseInt(amount);
         if (
             isNaN(questionAmount) ||
@@ -36,6 +37,20 @@ export async function POST(request: Request) {
             );
         }
 
+        // Fetch user for resume context
+        const user = await prisma.user.findUnique({
+            where: { id: userid },
+            select: { resumeURL: true },
+        });
+
+        const resumeContext = user?.resumeURL
+            ? `\nCandidate's Resume Context: The candidate has a resume. If you can infer common projects for a ${role} with ${techstack}, ask deep-dive questions about those. Focus on challenging technical problems they might have faced.`
+            : "";
+
+        const jdContext = jobDescription
+            ? `\nJob Description: ${jobDescription}\nTailor the questions to specifically match this role's requirements and company culture if mentioned.`
+            : "";
+
         console.log("Generating questions for:", {
             type,
             role,
@@ -43,6 +58,8 @@ export async function POST(request: Request) {
             techstack,
             amount: questionAmount,
             userid,
+            hasJD: !!jobDescription,
+            hasResume: !!user?.resumeURL,
         });
 
         const { text: questionsText } = await generateText({
@@ -51,16 +68,17 @@ export async function POST(request: Request) {
         Experience level: ${level}
         Tech stack: ${techstack}
         Focus: ${type}
+        ${resumeContext}
+        ${jdContext}
         
         IMPORTANT: Return ONLY a valid JSON array of strings. No additional text, no markdown, no explanations.
         Format: ["Question 1", "Question 2", "Question 3"]
         
-        Questions should be clear, professional, and avoid special characters that might break voice assistants.
-        Do not use /, *, or other special characters.
-        
-        Example format:
-        ["Tell me about your experience with React", "How do you handle state management in large applications", "Describe a challenging project you worked on"]
-      `,
+        Personalization Rules:
+        1. If a Job Description is provided, make questions highly specific to it.
+        2. If Resume Context is provided, include at least one "behavioral deep-dive" question like: "Can you explain the most difficult technical challenge you faced while working on project X?" (Use common projects for this role if specific ones aren't listed).
+        3. Questions should be clear, professional, and vary in difficulty.
+        `,
         });
 
         console.log("Raw AI response:", questionsText);
@@ -135,6 +153,7 @@ export async function POST(request: Request) {
                 level: level.trim(),
                 techstack: techstackArray,
                 questions: questions,
+                jobDescription: jobDescription || null,
                 userId: userid,
                 finalized: true,
                 coverImage: getInterviewCover("", role.trim()), // Will be updated by ID if needed, or use role

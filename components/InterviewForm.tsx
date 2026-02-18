@@ -14,7 +14,10 @@ import {
     Briefcase,
     ChevronRight,
     Sparkles,
-    CheckCircle2,
+    GraduationCap,
+    Palette,
+    Gavel,
+    Factory,
 } from "lucide-react";
 
 import { Form } from "@/components/ui/form";
@@ -29,6 +32,7 @@ const interviewFormSchema = z.object({
     type: z.string().min(1, "Interview type is required"),
     techstack: z.string().min(1, "Tech stack is required"),
     amount: z.number().min(3).max(15),
+    jobDescription: z.string().optional(),
 });
 
 const iconMap: Record<string, any> = {
@@ -37,6 +41,10 @@ const iconMap: Record<string, any> = {
     TrendingUp: TrendingUp,
     Scale: Scale,
     Briefcase: Briefcase,
+    GraduationCap: GraduationCap,
+    Palette: Palette,
+    Gavel: Gavel,
+    Factory: Factory,
 };
 
 const InterviewForm = ({ userId }: InterviewFormProps) => {
@@ -54,6 +62,7 @@ const InterviewForm = ({ userId }: InterviewFormProps) => {
             type: "technical",
             techstack: "",
             amount: 5,
+            jobDescription: "",
         },
     });
 
@@ -100,11 +109,16 @@ const InterviewForm = ({ userId }: InterviewFormProps) => {
                     className="flex flex-col lg:flex-row gap-10 items-start"
                 >
                     {/* Left Side: Domain Selection */}
-                    <div className="w-full lg:w-1/3 flex flex-col gap-4">
-                        <h3 className="text-sm font-bold text-primary-200 uppercase tracking-widest mb-2">
-                            1. Select Domain
-                        </h3>
-                        <div className="flex flex-col gap-3">
+                    <div className="w-full lg:w-1/3 flex flex-col gap-6">
+                        <div className="flex flex-col gap-1">
+                            <h3 className="text-base font-bold text-primary-200 uppercase tracking-[0.2em]">
+                                1. Select Domain
+                            </h3>
+                            <p className="text-sm text-light-400">
+                                Choose the industry for your simulation
+                            </p>
+                        </div>
+                        <div className="grid grid-cols-1 gap-3">
                             {INTERVIEW_DOMAINS.map(
                                 (domain: InterviewDomain) => {
                                     const Icon = iconMap[domain.icon];
@@ -117,34 +131,34 @@ const InterviewForm = ({ userId }: InterviewFormProps) => {
                                             onClick={() =>
                                                 setSelectedDomain(domain)
                                             }
-                                            className={`group relative flex items-start gap-4 p-5 rounded-2xl border transition-all duration-300 text-left ${
+                                            className={`group relative flex items-start gap-4 p-6 rounded-2xl border transition-all duration-300 text-left ${
                                                 isActive
-                                                    ? "bg-primary-200/10 border-primary-200 shadow-[0_0_20px_rgba(202,197,254,0.1)]"
-                                                    : "bg-[#020408]/40 border-white/5 hover:border-white/10 hover:bg-[#020408]/60"
+                                                    ? "bg-primary-200/10 border-primary-200 shadow-[0_0_30px_rgba(202,197,254,0.15)]"
+                                                    : "bg-[#020408]/40 border-white/5 hover:border-white/10 hover:bg-[#020408]/60 hover:translate-x-1"
                                             }`}
                                         >
                                             <div
-                                                className={`p-3 rounded-xl transition-colors ${
+                                                className={`p-4 rounded-xl transition-all duration-300 ${
                                                     isActive
-                                                        ? "bg-primary-200 text-dark-100"
-                                                        : "bg-white/5 text-light-400 group-hover:text-white"
+                                                        ? "bg-primary-200 text-dark-100 scale-110"
+                                                        : "bg-white/5 text-light-400 group-hover:text-white group-hover:bg-white/10"
                                                 }`}
                                             >
                                                 <Icon className="size-6" />
                                             </div>
-                                            <div className="flex flex-col gap-1">
+                                            <div className="flex flex-col gap-1 pr-6">
                                                 <span
-                                                    className={`font-bold transition-colors ${isActive ? "text-white" : "text-light-100"}`}
+                                                    className={`text-base font-bold transition-colors ${isActive ? "text-white" : "text-light-100 group-hover:text-white"}`}
                                                 >
                                                     {domain.name}
                                                 </span>
-                                                <span className="text-xs text-light-400 line-clamp-1">
+                                                <span className="text-xs text-light-400 line-clamp-2 leading-relaxed">
                                                     {domain.description}
                                                 </span>
                                             </div>
                                             {isActive && (
-                                                <div className="absolute right-4 top-1/2 -translate-y-1/2">
-                                                    <CheckCircle2 className="size-5 text-primary-200" />
+                                                <div className="absolute right-5 top-1/2 -translate-y-1/2">
+                                                    <div className="size-2.5 rounded-full bg-primary-200 animate-pulse" />
                                                 </div>
                                             )}
                                         </button>
@@ -156,23 +170,34 @@ const InterviewForm = ({ userId }: InterviewFormProps) => {
 
                     {/* Right Side: Form Details */}
                     <div className="w-full lg:w-2/3 flex flex-col gap-8">
-                        <div className="p-8 rounded-3xl bg-[#020408]/40 backdrop-blur-xl border border-white/5 relative overflow-hidden group/form shadow-2xl">
-                            {/* Decorative glow */}
-                            <div className="absolute -top-24 -right-24 size-48 bg-primary-200/5 blur-[80px] rounded-full pointer-events-none" />
+                        <div className="p-10 rounded-[2rem] bg-[#020408]/40 backdrop-blur-3xl border border-white/5 relative overflow-hidden group/form shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
+                            {/* Premium Glow Effects */}
+                            <div className="absolute -top-40 -left-40 size-80 bg-primary-200/10 blur-[120px] rounded-full pointer-events-none group-hover/form:bg-primary-200/20 transition-all duration-1000" />
+                            <div className="absolute -bottom-40 -right-40 size-80 bg-blue-500/5 blur-[120px] rounded-full pointer-events-none" />
 
-                            <div className="relative z-10 flex flex-col gap-8">
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div className="relative z-10 flex flex-col gap-10">
+                                <div className="flex flex-col gap-2">
+                                    <h3 className="text-base font-bold text-primary-200 uppercase tracking-[0.2em]">
+                                        2. Customization
+                                    </h3>
+                                    <p className="text-sm text-light-400">
+                                        Fine-tune the interview to your specific
+                                        needs
+                                    </p>
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                                     {/* Role Selection */}
-                                    <div className="flex flex-col gap-4">
+                                    <div className="flex flex-col gap-5">
                                         <FormField
                                             control={form.control}
                                             name="role"
-                                            label="Specific Role"
-                                            placeholder="e.g. Senior Software Engineer"
+                                            label="Target Role"
+                                            placeholder={`e.g. ${selectedDomain.popularRoles.slice(0, 2).join(", ")}`}
                                         />
                                         <div className="flex flex-wrap gap-2">
                                             {selectedDomain.popularRoles
-                                                .slice(0, 4)
+                                                .slice(0, 5)
                                                 .map((role: string) => (
                                                     <button
                                                         key={role}
@@ -183,7 +208,7 @@ const InterviewForm = ({ userId }: InterviewFormProps) => {
                                                                 role,
                                                             )
                                                         }
-                                                        className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider bg-white/5 hover:bg-white/10 text-light-400 hover:text-white rounded-full transition-all border border-white/5 hover:border-white/10"
+                                                        className="px-4 py-2 text-xs font-bold uppercase tracking-wider bg-white/5 hover:bg-primary-200/20 text-light-400 hover:text-primary-200 rounded-lg transition-all border border-white/5 hover:border-primary-200/30"
                                                     >
                                                         {role}
                                                     </button>
@@ -192,16 +217,16 @@ const InterviewForm = ({ userId }: InterviewFormProps) => {
                                     </div>
 
                                     {/* Tech Stack */}
-                                    <div className="flex flex-col gap-4">
+                                    <div className="flex flex-col gap-5">
                                         <FormField
                                             control={form.control}
                                             name="techstack"
-                                            label="Relevant Topics / Tech"
-                                            placeholder="e.g. React, System Design"
+                                            label="Key Topics / Stack"
+                                            placeholder={`e.g. ${selectedDomain.techStacks.slice(0, 2).join(", ")}`}
                                         />
                                         <div className="flex flex-wrap gap-2">
                                             {selectedDomain.techStacks
-                                                .slice(0, 3)
+                                                .slice(0, 4)
                                                 .map((stack: string) => (
                                                     <button
                                                         key={stack}
@@ -212,7 +237,7 @@ const InterviewForm = ({ userId }: InterviewFormProps) => {
                                                                 stack,
                                                             )
                                                         }
-                                                        className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider bg-primary-200/5 hover:bg-primary-200/10 text-primary-200/70 hover:text-primary-200 rounded-full transition-all border border-primary-200/10 hover:border-primary-200/20"
+                                                        className="px-4 py-2 text-xs font-bold uppercase tracking-wider bg-white/5 hover:bg-primary-200/20 text-light-400 hover:text-primary-200 rounded-lg transition-all border border-white/5 hover:border-primary-200/30"
                                                     >
                                                         {stack}
                                                     </button>
@@ -221,11 +246,33 @@ const InterviewForm = ({ userId }: InterviewFormProps) => {
                                     </div>
                                 </div>
 
-                                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4 border-t border-white/5">
+                                {/* Job Description */}
+                                <div className="flex flex-col gap-5 pt-6 border-t border-white/10">
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex items-center gap-2">
+                                            <Briefcase className="size-5 text-primary-200" />
+                                            <h4 className="text-base font-bold text-light-100">
+                                                Job Description
+                                            </h4>
+                                        </div>
+                                        <span className="text-xs text-light-400 bg-white/5 px-3 py-1.5 rounded">
+                                            Optional but Recommended
+                                        </span>
+                                    </div>
+                                    <FormField
+                                        control={form.control}
+                                        name="jobDescription"
+                                        label=""
+                                        placeholder="Paste the Job Description here for a more tailored experience..."
+                                        isTextArea
+                                    />
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-8 border-t border-white/10">
                                     {/* Level */}
-                                    <div className="flex flex-col gap-3">
-                                        <label className="text-[10px] font-black text-light-600 uppercase tracking-[0.2em]">
-                                            Level
+                                    <div className="flex flex-col gap-4">
+                                        <label className="text-xs font-black text-primary-200 uppercase tracking-[0.2em]">
+                                            Experience
                                         </label>
                                         <div className="flex flex-col gap-2">
                                             {experienceLevels.map((lvl) => (
@@ -238,17 +285,17 @@ const InterviewForm = ({ userId }: InterviewFormProps) => {
                                                             lvl.value,
                                                         )
                                                     }
-                                                    className={`px-4 py-3 rounded-xl text-left transition-all border ${
+                                                    className={`px-4 py-4 rounded-2xl text-left transition-all border-2 ${
                                                         form.watch("level") ===
                                                         lvl.value
-                                                            ? "bg-white/10 border-white/20 text-white"
-                                                            : "bg-transparent border-white/5 text-light-400 hover:border-white/10"
+                                                            ? "bg-primary-200/10 border-primary-200 text-white shadow-[0_0_20px_rgba(202,197,254,0.1)]"
+                                                            : "bg-white/5 border-transparent text-light-400 hover:bg-white/10"
                                                     }`}
                                                 >
-                                                    <div className="text-sm font-bold">
+                                                    <div className="text-sm font-bold leading-none mb-1">
                                                         {lvl.label}
                                                     </div>
-                                                    <div className="text-[10px] opacity-60">
+                                                    <div className="text-xs opacity-50 font-medium">
                                                         {lvl.desc}
                                                     </div>
                                                 </button>
@@ -257,9 +304,9 @@ const InterviewForm = ({ userId }: InterviewFormProps) => {
                                     </div>
 
                                     {/* Type */}
-                                    <div className="flex flex-col gap-3">
-                                        <label className="text-[10px] font-black text-light-600 uppercase tracking-[0.2em]">
-                                            Format
+                                    <div className="flex flex-col gap-4">
+                                        <label className="text-xs font-black text-primary-200 uppercase tracking-[0.2em]">
+                                            Simulation type
                                         </label>
                                         <div className="flex flex-col gap-2">
                                             {interviewTypes.map((t) => (
@@ -272,17 +319,17 @@ const InterviewForm = ({ userId }: InterviewFormProps) => {
                                                             t.value,
                                                         )
                                                     }
-                                                    className={`px-4 py-3 rounded-xl text-left transition-all border ${
+                                                    className={`px-4 py-4 rounded-2xl text-left transition-all border-2 ${
                                                         form.watch("type") ===
                                                         t.value
-                                                            ? "bg-white/10 border-white/20 text-white"
-                                                            : "bg-transparent border-white/5 text-light-400 hover:border-white/10"
+                                                            ? "bg-primary-200/10 border-primary-200 text-white shadow-[0_0_20px_rgba(202,197,254,0.1)]"
+                                                            : "bg-white/5 border-transparent text-light-400 hover:bg-white/10"
                                                     }`}
                                                 >
-                                                    <div className="text-sm font-bold">
+                                                    <div className="text-sm font-bold leading-none mb-1">
                                                         {t.label}
                                                     </div>
-                                                    <div className="text-[10px] opacity-60">
+                                                    <div className="text-xs opacity-50 font-medium">
                                                         {t.desc}
                                                     </div>
                                                 </button>
@@ -291,29 +338,35 @@ const InterviewForm = ({ userId }: InterviewFormProps) => {
                                     </div>
 
                                     {/* Amount */}
-                                    <div className="flex flex-col gap-3">
-                                        <label className="text-[10px] font-black text-light-600 uppercase tracking-[0.2em]">
-                                            Duration
+                                    <div className="flex flex-col gap-4">
+                                        <label className="text-xs font-black text-primary-200 uppercase tracking-[0.2em]">
+                                            Intensity
                                         </label>
-                                        <div className="flex flex-col h-full gap-4">
-                                            <div className="flex-1 flex flex-col justify-center items-center p-6 bg-white/5 rounded-2xl border border-white/5 border-dashed">
-                                                <span className="text-4xl font-black text-white">
+                                        <div className="flex flex-col h-full gap-5">
+                                            <div className="flex-1 flex flex-col justify-center items-center p-8 bg-primary-200/5 rounded-[2rem] border border-primary-200/20 relative overflow-hidden group/intensity">
+                                                <div className="absolute top-0 left-0 w-full h-1 bg-primary-200/20" />
+                                                <span className="text-6xl font-black text-white relative z-10 drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">
                                                     {form.watch("amount")}
                                                 </span>
-                                                <span className="text-[10px] text-light-400 uppercase font-bold mt-1">
+                                                <span className="text-xs text-primary-200 uppercase font-black tracking-widest mt-2 relative z-10">
                                                     Questions
                                                 </span>
                                             </div>
-                                            <input
-                                                type="range"
-                                                min="3"
-                                                max="15"
-                                                step="1"
-                                                {...form.register("amount", {
-                                                    valueAsNumber: true,
-                                                })}
-                                                className="w-full accent-primary-200 cursor-pointer"
-                                            />
+                                            <div className="px-2">
+                                                <input
+                                                    type="range"
+                                                    min="3"
+                                                    max="15"
+                                                    step="1"
+                                                    {...form.register(
+                                                        "amount",
+                                                        {
+                                                            valueAsNumber: true,
+                                                        },
+                                                    )}
+                                                    className="w-full accent-primary-200 cursor-pointer h-2 rounded-full bg-white/10 appearance-none shadow-[0_0_10px_rgba(202,197,254,0.1)]"
+                                                />
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -321,18 +374,21 @@ const InterviewForm = ({ userId }: InterviewFormProps) => {
                                 <Button
                                     type="submit"
                                     disabled={isGenerating}
-                                    className="w-full py-8 rounded-2xl bg-primary-200 text-dark-100 hover:bg-primary-200/90 text-lg font-black uppercase tracking-widest relative overflow-hidden group/submit transition-all hover:scale-[1.01] active:scale-[0.99] shadow-[0_0_30px_rgba(202,197,254,0.2)] hover:shadow-[0_0_50px_rgba(202,197,254,0.3)]"
+                                    className="w-full py-10 rounded-2xl bg-primary-200 text-dark-100 hover:bg-primary-200/90 text-2xl font-black uppercase tracking-[0.25em] relative overflow-hidden group/submit transition-all hover:scale-[1.02] active:scale-[0.98] shadow-[0_0_40px_rgba(202,197,254,0.3)] hover:shadow-[0_0_60px_rgba(202,197,254,0.4)]"
                                 >
+                                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover/submit:animate-shimmer" />
                                     {isGenerating ? (
-                                        <div className="flex items-center gap-3">
-                                            <div className="animate-spin rounded-full h-5 w-5 border-2 border-dark-100/30 border-t-dark-100" />
-                                            <span>Crafting Simulation...</span>
+                                        <div className="flex items-center gap-4">
+                                            <div className="animate-spin rounded-full h-7 w-7 border-4 border-dark-100/30 border-t-dark-100" />
+                                            <span className="animate-pulse">
+                                                Analyzing...
+                                            </span>
                                         </div>
                                     ) : (
-                                        <div className="flex items-center gap-2">
-                                            <Sparkles className="size-6 animate-pulse" />
-                                            <span>Generate Interview</span>
-                                            <ChevronRight className="size-6 group-hover/submit:translate-x-1 transition-transform" />
+                                        <div className="flex items-center gap-3">
+                                            <Sparkles className="size-8 animate-pulse text-dark-100" />
+                                            <span>Initialize Session</span>
+                                            <ChevronRight className="size-8 group-hover/submit:translate-x-2 transition-all duration-500" />
                                         </div>
                                     )}
                                 </Button>

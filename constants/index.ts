@@ -167,6 +167,7 @@ export const feedbackSchema = z.object({
     strengths: z.array(z.string()),
     areasForImprovement: z.array(z.string()),
     finalAssessment: z.string(),
+    behavioralTips: z.array(z.string()),
 });
 
 export interface InterviewDomain {
@@ -284,6 +285,67 @@ export const INTERVIEW_DOMAINS: InterviewDomain[] = [
             "Digital Marketing, SEO, SEM",
             "B2B Sales, CRM (Salesforce)",
             "Talent Acquisition, Employee Relations",
+        ],
+    },
+    {
+        id: "education",
+        name: "Education & Teaching",
+        icon: "GraduationCap",
+        description: "Primary, Secondary, Higher Ed, and corporate training.",
+        popularRoles: [
+            "University Professor",
+            "High School Teacher",
+            "Instructional Designer",
+            "School Administrator",
+            "Tutor",
+            "Educational Consultant",
+        ],
+        techStacks: [
+            "Curriculum Design, Pedagogy",
+            "LMS (Canvas, Blackboard)",
+            "Student Engagement, Classroom Management",
+            "Academic Research, E-learning",
+        ],
+    },
+    {
+        id: "creative",
+        name: "Creative & Design",
+        icon: "Palette",
+        description: "UI/UX, Graphic Design, Video, and Animation.",
+        popularRoles: [
+            "UI/UX Designer",
+            "Graphic Designer",
+            "Art Director",
+            "Motion Designer",
+            "Video Editor",
+            "Product Designer",
+        ],
+        techStacks: [
+            "Figma, Adobe Creative Suite",
+            "Design Systems, Prototyping",
+            "Typography, Color Theory",
+            "Video Production, Storyboarding",
+        ],
+    },
+    {
+        id: "government",
+        name: "Public Service",
+        icon: "Gavel",
+        description:
+            "Administration, Policy, Social Work, and Law Enforcement.",
+        popularRoles: [
+            "Policy Analyst",
+            "Public Administrator",
+            "Social Worker",
+            "Firefighter",
+            "Police Officer",
+            "Human Rights Advocate",
+        ],
+        techStacks: [
+            "Public Policy, Legislation",
+            "Case Management, Crisis Intervention",
+            "Community Outreach, Logistics",
+            "Administrative Law, Ethics",
         ],
     },
 ];

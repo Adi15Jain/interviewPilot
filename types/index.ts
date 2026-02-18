@@ -10,6 +10,8 @@ export interface Feedback {
     strengths: string[];
     areasForImprovement: string[];
     finalAssessment: string;
+    behavioralTips?: string[];
+    emotionalAnalysis?: any;
     createdAt: string;
 }
 
@@ -30,6 +32,11 @@ export interface CreateFeedbackParams {
     userId: string;
     transcript: { role: string; content: string }[];
     feedbackId?: string;
+    emotionalData?: {
+        confidence: number;
+        eyeContact: number;
+        timestamp: number;
+    }[];
 }
 
 export interface GetFeedbackByInterviewIdParams {

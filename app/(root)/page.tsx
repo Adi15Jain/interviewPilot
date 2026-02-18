@@ -52,7 +52,7 @@ const Home = async () => {
     return (
         <div className="flex flex-col gap-12 pb-20 animate-in fade-in duration-1000">
             {/* Cinematic Hero */}
-            <section className="card-cta relative group/hero overflow-visible">
+            <section className="card-cta relative group/hero overflow-hidden">
                 {/* Background decorative elements */}
                 <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary-200/5 blur-[120px] rounded-full -mr-48 -mt-48 transition-all duration-700 group-hover/hero:bg-primary-200/10" />
 

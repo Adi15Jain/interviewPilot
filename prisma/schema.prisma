@@ -77,6 +77,7 @@ model Interview {
   type         String
   techstack    String[]
   questions    String[]
+  jobDescription String?
   coverImage   String?
   finalized    Boolean    @default(false)
   createdAt    DateTime   @default(now())
@@ -99,6 +100,8 @@ model Feedback {
   strengths              String[]
   areasForImprovement    String[]
   finalAssessment        String
+  emotionalAnalysis      Json?       // Stores timeline of confidence/emotions
+  behavioralTips         String[]    // AI-generated body language coaching
   createdAt              DateTime   @default(now())
   updatedAt              DateTime   @updatedAt
   

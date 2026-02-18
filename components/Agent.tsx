@@ -1,8 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import EmotionTracker from "./EmotionTracker";
 
 import { cn } from "@/lib/utils";
 import { vapi } from "@/lib/vapi.sdk";
@@ -39,6 +40,11 @@ const Agent = ({
     const [messages, setMessages] = useState<SavedMessage[]>([]);
     const [isSpeaking, setIsSpeaking] = useState(false);
     const [lastMessage, setLastMessage] = useState<string>("");
+    const [emotionalData, setEmotionalData] = useState<any[]>([]);
+
+    const handleEmotionData = useCallback((data: any) => {
+        setEmotionalData((prev) => [...prev, data]);
+    }, []);
 
     useEffect(() => {
         const onCallStart = () => {
@@ -140,6 +146,7 @@ const Agent = ({
                 userId: userId!,
                 transcript: messages,
                 feedbackId,
+                emotionalData: emotionalData,
             });
 
             if (success && id) {
@@ -363,6 +370,11 @@ const Agent = ({
                     )}
                 </div>
             </div>
+
+            <EmotionTracker
+                isActive={callStatus === CallStatus.ACTIVE}
+                onData={handleEmotionData}
+            />
         </div>
     );
 };

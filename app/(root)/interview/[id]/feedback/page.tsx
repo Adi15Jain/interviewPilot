@@ -13,6 +13,7 @@ import SkillRadarChart from "@/components/SkillRadarChart";
 import PerformanceGauge from "@/components/PerformanceGauge";
 import CategoryList from "@/components/CategoryList";
 import InsightCard from "@/components/InsightCard";
+import BehavioralAnalysis from "@/components/BehavioralAnalysis";
 import { RouteParams } from "@/types";
 
 const Feedback = async ({ params }: RouteParams) => {
@@ -47,19 +48,19 @@ const Feedback = async ({ params }: RouteParams) => {
                             href="/"
                             className="flex items-center gap-2 text-xs font-black uppercase tracking-[0.2em] text-light-100/40 hover:text-primary-200 transition-colors w-fit group"
                         >
-                            <ChevronLeft className="size-3 group-hover:-translate-x-1 transition-transform" />
+                            <ChevronLeft className="size-4 group-hover:-translate-x-1 transition-transform" />
                             Return to Mission Control
                         </Link>
                         <h1 className="text-4xl md:text-5xl font-black tracking-tighter uppercase leading-none">
                             Performance{" "}
                             <span className="text-primary-200">Analysis</span>
                         </h1>
-                        <div className="flex flex-wrap items-center gap-x-6 text-[10px] font-black uppercase tracking-widest text-light-600">
+                        <div className="flex flex-wrap items-center gap-x-6 text-[12px] font-black uppercase tracking-widest text-light-600">
                             <span className="text-primary-200/80">
                                 {interview.role}
                             </span>
-                            <span className="size-1 bg-white/10 rounded-full" />
-                            <span>
+                            <span className="size-2 bg-white/50 rounded-full" />
+                            <span className="text-white">
                                 {dayjs(feedback.createdAt).format(
                                     "MMM D, YYYY",
                                 )}
@@ -156,7 +157,7 @@ const Feedback = async ({ params }: RouteParams) => {
                     <div className="p-10 md:p-14 rounded-[3rem] bg-gradient-to-br from-primary-500/10 via-primary-500/[0.02] to-transparent border border-primary-500/10 relative overflow-hidden group">
                         <Quote className="absolute -top-6 -left-6 size-32 text-primary-500/5 -rotate-12 transition-transform group-hover:rotate-0 duration-1000" />
                         <div className="relative flex flex-col gap-6">
-                            <h3 className="text-xs font-black uppercase tracking-[0.5em] text-primary-200">
+                            <h3 className="text-lg font-black uppercase tracking-[0.5em] text-primary-200 pl-14">
                                 Strategic Assessment
                             </h3>
                             <p className="text-xl md:text-2xl font-bold text-light-100 leading-tight tracking-tight">
@@ -170,6 +171,16 @@ const Feedback = async ({ params }: RouteParams) => {
                             </div>
                         </div>
                     </div>
+                </div>
+
+                {/* Tier 2.5: Behavioral Analysis */}
+                <div className="w-full animate-in slide-in-from-bottom-8 duration-1000 delay-300">
+                    <BehavioralAnalysis
+                        emotionalAnalysis={
+                            (feedback.emotionalAnalysis as any[]) || []
+                        }
+                        behavioralTips={feedback.behavioralTips || []}
+                    />
                 </div>
 
                 {/* Tier 3: In-Depth Breakdown & Qualitative Analysis */}
