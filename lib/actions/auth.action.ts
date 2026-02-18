@@ -155,6 +155,7 @@ export async function getCurrentUser(): Promise<User | null> {
                 email: true,
                 image: true,
                 profileURL: true,
+                createdAt: true,
             },
         });
 
@@ -165,6 +166,7 @@ export async function getCurrentUser(): Promise<User | null> {
             name: user.name,
             email: user.email,
             image: user.image || user.profileURL || undefined,
+            createdAt: user.createdAt,
         };
     } catch (error) {
         console.error("Error getting current user:", error);

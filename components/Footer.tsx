@@ -1,11 +1,36 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Github, Linkedin, Mail } from "lucide-react";
 
 const Footer = () => {
     const currentYear = new Date().getFullYear();
 
+    const creators = [
+        {
+            name: "Adi Jain",
+            role: "AI/ML Engineer",
+            image: "/creators/adi.jpg",
+            github: "https://github.com/Adi15Jain",
+            linkedin: "https://www.linkedin.com/in/adi-jain-73334724b/",
+        },
+        {
+            name: "Himanshu Jain",
+            role: "Backend Developer",
+            image: "/creators/himanshu.jpeg",
+            github: "https://github.com/himanshujain112",
+            linkedin: "https://www.linkedin.com/in/himanshu-jain112/",
+        },
+        {
+            name: "Ashmit Jain",
+            role: "Frontend Developer",
+            image: "/creators/ashmit-jain.jpg",
+            github: "https://github.com",
+            linkedin: "https://www.linkedin.com/in/ashmit--jain/",
+        },
+    ];
+
     return (
-        <footer className="w-full border-t border-white/5 bg-[#020408]/40 backdrop-blur-xl mt-10 relative overflow-hidden group/footer mesh-gradient">
+        <footer className="w-full border-t border-white/5 bg-[#020408]/40 backdrop-blur-xl mt-10 relative group/footer mesh-gradient">
             <div className="max-w-7xl mx-auto px-12 max-sm:px-6 py-16 relative z-10">
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-16 lg:gap-24">
                     {/* Brand & Institution Section */}
@@ -68,35 +93,29 @@ const Footer = () => {
                             Development Team
                         </h4>
                         <div className="flex flex-col gap-5">
-                            {[
-                                {
-                                    name: "Adi Jain",
-                                    role: "AI/ML Engineer",
-                                    github: "https://github.com/Adi15Jain",
-                                    linkedin:
-                                        "https://www.linkedin.com/in/adi-jain-73334724b/",
-                                },
-                                {
-                                    name: "Himanshu Jain",
-                                    role: "Backend Developer",
-                                    github: "https://github.com/himanshujain112",
-                                    linkedin:
-                                        "https://www.linkedin.com/in/himanshu-jain112/",
-                                },
-                                {
-                                    name: "Ashmit Jain",
-                                    role: "Frontend Developer",
-                                    github: "https://github.com",
-                                    linkedin:
-                                        "https://www.linkedin.com/in/ashmit--jain/",
-                                },
-                            ].map((creator) => (
+                            {creators.map((creator) => (
                                 <div
                                     key={creator.name}
-                                    className="flex flex-col gap-1.5 group/item"
+                                    className="flex flex-col gap-1.5 group/item relative"
                                 >
+                                    {/* Hover Image Card */}
+                                    <div className="absolute bottom-full left-0 mb-4 opacity-0 scale-90 group-hover/item:opacity-100 group-hover/item:scale-100 transition-all duration-300 pointer-events-none z-50">
+                                        <div className="relative w-40 h-48 rounded-2xl overflow-hidden border border-white/10 shadow-2xl shadow-primary-500/20 bg-dark-200/80 backdrop-blur-xl p-1.5">
+                                            <div className="relative w-full h-full rounded-xl overflow-hidden">
+                                                <Image
+                                                    src={creator.image}
+                                                    alt={creator.name}
+                                                    fill
+                                                    className="object-cover"
+                                                />
+                                            </div>
+                                        </div>
+                                        {/* Tooltip Arrow alternative */}
+                                        <div className="absolute -bottom-1 left-6 w-3 h-3 bg-dark-200/80 border-r border-b border-white/10 rotate-45" />
+                                    </div>
+
                                     <div className="flex items-center justify-between">
-                                        <p className="text-light-100 text-sm font-black tracking-tight">
+                                        <p className="text-light-100 text-sm font-black tracking-tight cursor-default">
                                             {creator.name}
                                         </p>
                                         <div className="flex items-center gap-3 opacity-0 group-hover/item:opacity-100 transition-opacity">

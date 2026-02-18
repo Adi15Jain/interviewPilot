@@ -45,7 +45,7 @@ export async function createFeedback(params: CreateFeedbackParams) {
                 : "";
 
         const { object } = await generateObject({
-            model: google("gemini-2.0-flash"),
+            model: google("gemini-2.5-flash"),
             schema: feedbackSchema,
             prompt: `
         You are an AI interviewer analyzing a mock interview. Your task is to evaluate the candidate based on structured categories. Be thorough and detailed in your analysis. Don't be lenient with the candidate. If there are mistakes or areas for improvement, point them out.
@@ -217,5 +217,107 @@ export async function getFeedbacksByUserId(
     } catch (error) {
         console.error("Error getting user feedbacks:", error);
         return null;
+    }
+}
+export async function getGlobalStats(userId: string) {
+    try {
+        // Get average score for the current user
+        const userFeedbacks = await prisma.feedback.findMany({
+            where: { userId },
+            select: { totalScore: true },
+        });
+
+        if (userFeedbacks.length === 0) {
+            return { percentile: 100, globalAverage: 0 };
+        }
+
+        const userAvg =
+            userFeedbacks.reduce((acc, f) => acc + f.totalScore, 0) /
+            userFeedbacks.length;
+
+        // Get average scores for all other users who have feedbacks
+        const allUserFeedbacks = await prisma.feedback.groupBy({
+            by: ["userId"],
+            _avg: {
+                totalScore: true,
+            },
+        });
+
+        const otherAvgs = allUserFeedbacks
+            .filter((stat) => stat.userId !== userId)
+            .map((stat) => stat._avg.totalScore || 0);
+
+        if (otherAvgs.length === 0) {
+            return { percentile: 50, globalAverage: userAvg };
+        }
+
+        // Calculate percentile: how many users have a lower average score than current user
+        const usersBelow = otherAvgs.filter((avg) => avg < userAvg).length;
+        const totalUsers = otherAvgs.length + 1; // +1 for the current user
+
+        // Rank is (totalUsers - usersBelow) / totalUsers
+        // If usersBelow is totalUsers - 1, then rank is 1/totalUsers (e.g. top 1%)
+        const percentile = Math.max(
+            1,
+            Math.round(((totalUsers - usersBelow) / totalUsers) * 100),
+        );
+
+        const globalAvg =
+            allUserFeedbacks.reduce(
+                (acc, stat) => acc + (stat._avg.totalScore || 0),
+                0,
+            ) / allUserFeedbacks.length;
+
+        return { percentile, globalAverage: globalAvg };
+    } catch (error) {
+        console.error("Error getting global stats:", error);
+        return { percentile: 100, globalAverage: 0 };
+    }
+}
+
+export async function getLeaderboard(limit: number = 50) {
+    try {
+        const leaderboardData = await prisma.feedback.groupBy({
+            by: ["userId"],
+            _avg: {
+                totalScore: true,
+            },
+            _count: {
+                interviewId: true,
+            },
+            orderBy: {
+                _avg: {
+                    totalScore: "desc",
+                },
+            },
+            take: limit,
+        });
+
+        const userIds = leaderboardData.map((d) => d.userId);
+        const users = await prisma.user.findMany({
+            where: {
+                id: { in: userIds },
+            },
+            select: {
+                id: true,
+                name: true,
+                image: true,
+                profileURL: true,
+            },
+        });
+
+        return leaderboardData.map((data) => {
+            const user = users.find((u) => u.id === data.userId);
+            return {
+                userId: data.userId,
+                name: user?.name || "Unknown User",
+                image: user?.image || user?.profileURL || null,
+                avgScore: Math.round(data._avg.totalScore || 0),
+                interviewCount: data._count.interviewId,
+            };
+        });
+    } catch (error) {
+        console.error("Error getting leaderboard:", error);
+        return [];
     }
 }

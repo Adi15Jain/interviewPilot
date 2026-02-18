@@ -5,7 +5,9 @@ import { Button } from "@/components/ui/button";
 import {
     getInterviewsByUserId,
     getFeedbacksByUserId,
+    getGlobalStats,
 } from "@/lib/actions/general.action";
+import dayjs from "dayjs";
 import { getCurrentUser } from "@/lib/actions/auth.action";
 import ScoreTrendChart from "@/components/ScoreTrendChart";
 import CategoryProgress from "@/components/CategoryProgress";
@@ -24,9 +26,10 @@ const ProfilePage = async () => {
     const user = await getCurrentUser();
     if (!user) redirect("/sign-in");
 
-    const [interviews, feedbacks] = await Promise.all([
+    const [interviews, feedbacks, globalStats] = await Promise.all([
         getInterviewsByUserId(user.id),
         getFeedbacksByUserId(user.id),
+        getGlobalStats(user.id),
     ]);
 
     const totalInterviews = interviews?.length || 0;
@@ -40,7 +43,24 @@ const ProfilePage = async () => {
               )
             : 0;
 
+    // Calculate Level
+    let level = "Newcomer";
+    if (totalInterviews >= 20 && averageScore >= 80) level = "Master";
+    else if (totalInterviews >= 10) level = "Professional";
+    else if (totalInterviews >= 5) level = "Practitioner";
+    else if (totalInterviews >= 2) level = "Apprentice";
+
+    // Student since
+    const joinYear = dayjs(user.createdAt).year();
+
+    // Rank percentage
+    const rankText =
+        globalStats.percentile <= 1
+            ? "Top 1%"
+            : `Top ${globalStats.percentile}%`;
+
     // Process Trend Data
+    // ...
     const trendData =
         feedbacks?.map((f) => ({
             date: f.createdAt,
@@ -121,7 +141,7 @@ const ProfilePage = async () => {
                                 <div className="flex items-center gap-2 text-light-400">
                                     <Calendar className="size-4" />
                                     <span className="text-sm">
-                                        Student since 2024
+                                        Student since {joinYear}
                                     </span>
                                 </div>
                             </div>
@@ -158,7 +178,7 @@ const ProfilePage = async () => {
                                     </span>
                                 </div>
                                 <span className="text-2xl font-black text-white">
-                                    Advanced
+                                    {level}
                                 </span>
                             </div>
                             <div className="p-4 bg-white/5 rounded-2xl border border-white/5 flex flex-col gap-1">
@@ -169,7 +189,7 @@ const ProfilePage = async () => {
                                     </span>
                                 </div>
                                 <span className="text-2xl font-black text-white">
-                                    Top 5%
+                                    {rankText}
                                 </span>
                             </div>
                         </div>

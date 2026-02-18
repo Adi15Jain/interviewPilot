@@ -166,7 +166,7 @@ const Feedback = async ({ params }: RouteParams) => {
                             <div className="flex items-center gap-3 mt-2">
                                 <div className="size-1.5 rounded-full bg-primary-200 animate-pulse" />
                                 <span className="text-xs font-black uppercase tracking-widest text-light-600">
-                                    AI Evaluator • Gemini Flash Engine 2.0
+                                    AI Evaluator • Gemini Flash Engine 2.5
                                 </span>
                             </div>
                         </div>

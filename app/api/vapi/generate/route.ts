@@ -51,19 +51,19 @@ export async function POST(request: Request) {
             ? `\nJob Description: ${jobDescription}\nTailor the questions to specifically match this role's requirements and company culture if mentioned.`
             : "";
 
-        console.log("Generating questions for:", {
-            type,
-            role,
-            level,
-            techstack,
-            amount: questionAmount,
-            userid,
-            hasJD: !!jobDescription,
-            hasResume: !!user?.resumeURL,
-        });
+        // console.log("Generating questions for:", {
+        //     type,
+        //     role,
+        //     level,
+        //     techstack,
+        //     amount: questionAmount,
+        //     userid,
+        //     hasJD: !!jobDescription,
+        //     hasResume: !!user?.resumeURL,
+        // });
 
         const { text: questionsText } = await generateText({
-            model: google("gemini-2.0-flash"),
+            model: google("gemini-2.5-flash"),
             prompt: `Generate ${questionAmount} interview questions for a ${role} position.
         Experience level: ${level}
         Tech stack: ${techstack}
@@ -81,7 +81,7 @@ export async function POST(request: Request) {
         `,
         });
 
-        console.log("Raw AI response:", questionsText);
+        // console.log("Raw AI response:", questionsText);
 
         // Clean and validate the response
         let questions: string[] = [];

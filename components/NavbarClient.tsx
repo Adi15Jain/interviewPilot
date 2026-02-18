@@ -39,7 +39,7 @@ const NavbarClient = ({ user, UserProfileButton }: NavbarClientProps) => {
 
             <div className="flex items-center gap-10">
                 <div className="flex items-center gap-8">
-                    <Link
+                    {/* <Link
                         href="/"
                         className={`relative text-light-100 hover:text-white transition-all duration-300 font-semibold group ${
                             isActive("/") ? "text-white" : ""
@@ -53,7 +53,7 @@ const NavbarClient = ({ user, UserProfileButton }: NavbarClientProps) => {
                                     : "w-0 group-hover:w-full"
                             }`}
                         />
-                    </Link>
+                    </Link> */}
                     <Link
                         href="/history"
                         className={`relative text-light-100 hover:text-white transition-all duration-300 font-semibold group ${
@@ -64,6 +64,21 @@ const NavbarClient = ({ user, UserProfileButton }: NavbarClientProps) => {
                         <span
                             className={`absolute -bottom-1 left-0 h-0.5 bg-primary-200 transition-all duration-500 shadow-[0_0_10px_rgba(202,197,254,0.8)] ${
                                 isActive("/history")
+                                    ? "w-full"
+                                    : "w-0 group-hover:w-full"
+                            }`}
+                        />
+                    </Link>
+                    <Link
+                        href="/leaderboard"
+                        className={`relative text-light-100 hover:text-white transition-all duration-300 font-semibold group ${
+                            isActive("/leaderboard") ? "text-white" : ""
+                        }`}
+                    >
+                        Leaderboard
+                        <span
+                            className={`absolute -bottom-1 left-0 h-0.5 bg-primary-200 transition-all duration-500 shadow-[0_0_10px_rgba(202,197,254,0.8)] ${
+                                isActive("/leaderboard")
                                     ? "w-full"
                                     : "w-0 group-hover:w-full"
                             }`}

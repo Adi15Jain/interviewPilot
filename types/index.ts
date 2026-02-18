@@ -67,6 +67,7 @@ export interface User {
     email: string;
     id: string;
     image?: string;
+    createdAt?: Date;
 }
 
 export interface InterviewCardProps {

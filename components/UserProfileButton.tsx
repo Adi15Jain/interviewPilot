@@ -76,7 +76,7 @@ const UserProfileButton = ({ user }: UserProfileButtonProps) => {
 
             {/* Dropdown */}
             {isOpen && (
-                <div className="absolute right-0 top-full mt-3 w-72 rounded-2xl bg-[#020408]/60 backdrop-blur-xl border border-white/10 shadow-2xl shadow-black/80 z-50 overflow-hidden animate-in fade-in slide-in-from-top-3 duration-300 ring-1 ring-white/5">
+                <div className="absolute right-0 top-full mt-3 w-72 rounded-2xl bg-[#020408] backdrop-blur-xl border border-white/10 shadow-2xl shadow-black/80 z-50 overflow-hidden animate-in fade-in slide-in-from-top-3 duration-300 ring-1 ring-white/5">
                     {/* User Info Section */}
                     <div className="p-5 border-b border-white/5">
                         <div className="flex items-center gap-3.5">
