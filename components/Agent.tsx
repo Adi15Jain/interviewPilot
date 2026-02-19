@@ -375,7 +375,10 @@ const Agent = ({
                         >
                             <span className="absolute inset-0 bg-white/10 transition-transform translate-y-full group-hover:translate-y-0 duration-300" />
                             <span className="relative">
-                                End Interview Early
+                                {messages.filter((m) => m.role === "assistant")
+                                    .length >= (questions?.length || 0)
+                                    ? "Finish & Generate Report"
+                                    : "End Interview Early"}
                             </span>
                         </button>
                     )}
