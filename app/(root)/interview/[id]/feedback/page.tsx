@@ -14,6 +14,8 @@ import PerformanceGauge from "@/components/PerformanceGauge";
 import CategoryList from "@/components/CategoryList";
 import InsightCard from "@/components/InsightCard";
 import BehavioralAnalysis from "@/components/BehavioralAnalysis";
+import LearningHub from "@/components/LearningHub";
+import CareerRoadmap from "@/components/CareerRoadmap";
 import { RouteParams } from "@/types";
 
 const Feedback = async ({ params }: RouteParams) => {
@@ -100,46 +102,71 @@ const Feedback = async ({ params }: RouteParams) => {
 
                     {/* Mission Constants (Grid of 4) */}
                     <div className="lg:col-span-8 grid grid-cols-1 md:grid-cols-2 gap-8 h-full">
-                        <div className="glass-card-extreme p-10 flex flex-col gap-8 group hover:translate-y-[-4px] transition-all duration-500 rounded-[2.5rem]">
-                            <div className="flex items-center gap-3">
-                                <div className="p-2 rounded-lg bg-primary-500/10 text-primary-200">
-                                    <Target className="size-4" />
+                        <div className="glass-card-extreme p-8 flex flex-col gap-10 group hover:translate-y-[-4px] transition-all duration-500 rounded-[3rem] border-white/[0.08]">
+                            <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-3">
+                                    <div className="p-2.5 rounded-xl bg-primary-500/10 text-primary-200 border border-primary-500/20">
+                                        <Target className="size-5" />
+                                    </div>
+                                    <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-light-400">
+                                        Mission Parameters
+                                    </h4>
                                 </div>
-                                <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-light-400">
-                                    Mission Constants
-                                </h4>
+                                <div className="px-3 py-1 rounded-full bg-primary-500/10 border border-primary-500/20">
+                                    <span className="text-[9px] font-black uppercase tracking-widest text-primary-200">
+                                        Verified
+                                    </span>
+                                </div>
                             </div>
 
-                            <div className="grid grid-cols-2 gap-y-12 gap-x-6">
+                            <div className="grid grid-cols-2 gap-y-10 gap-x-8">
                                 {[
                                     {
                                         label: "Intelligence",
-                                        value: `${(interview.questions || []).length} Questions`,
+                                        value: `${(interview.questions || []).length} Qs`,
+                                        icon: <Quote className="size-3" />,
                                     },
-                                    { label: "Level", value: interview.level },
-                                    { label: "Sector", value: interview.role },
                                     {
-                                        label: "Deployment",
+                                        label: "Expertise",
+                                        value: interview.level,
+                                        icon: <Target className="size-3" />,
+                                    },
+                                    {
+                                        label: "Specialization",
+                                        value: interview.role,
+                                        icon: <Target className="size-3" />,
+                                    },
+                                    {
+                                        label: "Protocol",
                                         value: interview.type,
+                                        icon: <RotateCcw className="size-3" />,
                                     },
                                 ].map((stat, i) => (
                                     <div
                                         key={i}
-                                        className="flex flex-col gap-1"
+                                        className="flex flex-col gap-2 relative"
                                     >
-                                        <span className="text-[10px] font-black uppercase tracking-widest text-light-600/50">
-                                            {stat.label}
-                                        </span>
-                                        <span className="text-xl font-black text-white capitalize">
-                                            {stat.value}
-                                        </span>
+                                        <div className="flex items-center gap-2">
+                                            <div className="text-primary-200/60 group-hover:text-primary-200 transition-colors">
+                                                {stat.icon}
+                                            </div>
+                                            <span className="text-[9px] font-black uppercase tracking-widest text-light-600/60 font-mono">
+                                                {stat.label}
+                                            </span>
+                                        </div>
+                                        <div className="flex flex-col">
+                                            <span className="text-xl md:text-2xl font-black text-white leading-tight">
+                                                {stat.value}
+                                            </span>
+                                            <div className="h-[2px] w-0 group-hover:w-8 bg-primary-500/40 transition-all duration-700 mt-1" />
+                                        </div>
                                     </div>
                                 ))}
                             </div>
                         </div>
 
                         {/* Performance Vector (Radar) */}
-                        <div className="flex flex-col p-8 rounded-[2.5rem] bg-white/[0.02] border border-white/[0.05] backdrop-blur-xl relative overflow-hidden group">
+                        <div className="flex flex-col p-8 rounded-[2.5rem] bg-white/[0.02] border border-white/[0.05] backdrop-blur-xl relative group">
                             <SkillRadarChart
                                 data={(
                                     (feedback.categoryScores as any) || []
@@ -180,6 +207,22 @@ const Feedback = async ({ params }: RouteParams) => {
                             (feedback.emotionalAnalysis as any[]) || []
                         }
                         behavioralTips={feedback.behavioralTips || []}
+                    />
+                </div>
+
+                {/* Tier 2.7: Learning Hub (The Astro-Academy) */}
+                <div className="w-full">
+                    <LearningHub
+                        learningPath={(feedback.learningPath as any[]) || []}
+                    />
+                </div>
+
+                {/* Tier 2.8: Career Roadmap (Gap Analysis) */}
+                <div className="w-full">
+                    <CareerRoadmap
+                        currentScores={(feedback.categoryScores as any) || []}
+                        totalScore={feedback.totalScore}
+                        role={interview.role}
                     />
                 </div>
 

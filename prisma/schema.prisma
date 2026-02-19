@@ -102,6 +102,7 @@ model Feedback {
   finalAssessment        String
   emotionalAnalysis      Json?       // Stores timeline of confidence/emotions
   behavioralTips         String[]    // AI-generated body language coaching
+  learningPath           Json?       // Stores personalized learning items
   createdAt              DateTime   @default(now())
   updatedAt              DateTime   @updatedAt
   

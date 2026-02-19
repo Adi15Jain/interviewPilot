@@ -90,7 +90,9 @@ const EmotionTracker = ({ onData, isActive }: EmotionTrackerProps) => {
                         msg.includes("ROI width") ||
                         msg.includes("image_to_tensor") ||
                         msg.includes("calculator_graph") ||
-                        msg.includes("CalculatorGraph::Run")
+                        msg.includes("CalculatorGraph::Run") ||
+                        msg.includes("Valid ROI") ||
+                        msg.includes("face_landmarker")
                     ) {
                         return; // Suppress known MediaPipe WASM noise
                     }

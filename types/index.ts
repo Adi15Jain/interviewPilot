@@ -12,6 +12,11 @@ export interface Feedback {
     finalAssessment: string;
     behavioralTips?: string[];
     emotionalAnalysis?: any;
+    learningPath?: Array<{
+        topic: string;
+        resourceType: string;
+        reason: string;
+    }>;
     createdAt: string;
 }
 

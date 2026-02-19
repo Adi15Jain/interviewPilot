@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import EmotionTracker from "./EmotionTracker";
+import MASLoading from "./MASLoading";
 
 import { cn } from "@/lib/utils";
 import { vapi } from "@/lib/vapi.sdk";
@@ -41,6 +42,8 @@ const Agent = ({
     const [isSpeaking, setIsSpeaking] = useState(false);
     const [lastMessage, setLastMessage] = useState<string>("");
     const [emotionalData, setEmotionalData] = useState<any[]>([]);
+    const [isEarlyTermination, setIsEarlyTermination] = useState(false);
+    const [isGeneratingFeedback, setIsGeneratingFeedback] = useState(false);
 
     const handleEmotionData = useCallback((data: any) => {
         setEmotionalData((prev) => [...prev, data]);
@@ -140,6 +143,7 @@ const Agent = ({
 
         const handleGenerateFeedback = async (messages: SavedMessage[]) => {
             console.log("handleGenerateFeedback");
+            setIsGeneratingFeedback(true);
 
             const { success, feedbackId: id } = await createFeedback({
                 interviewId: interviewId!,
@@ -147,6 +151,8 @@ const Agent = ({
                 transcript: messages,
                 feedbackId,
                 emotionalData: emotionalData,
+                totalQuestions: (questions || []).length,
+                isEarlyTermination: isEarlyTermination,
             });
 
             if (success && id) {
@@ -231,9 +237,14 @@ const Agent = ({
     };
 
     const handleDisconnect = () => {
+        setIsEarlyTermination(true);
         setCallStatus(CallStatus.FINISHED);
         vapi.stop();
     };
+
+    if (isGeneratingFeedback) {
+        return <MASLoading />;
+    }
 
     return (
         <div className="flex flex-col gap-12 w-full max-w-5xl mx-auto">

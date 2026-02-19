@@ -23,7 +23,7 @@ const Footer = () => {
         {
             name: "Ashmit Jain",
             role: "Frontend Developer",
-            image: "/creators/ashmit-jain.jpg",
+            image: "/creators/himanshu.jpeg",
             github: "https://github.com",
             linkedin: "https://www.linkedin.com/in/ashmit--jain/",
         },

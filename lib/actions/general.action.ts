@@ -11,6 +11,13 @@ import {
     Interview,
     GetFeedbackByInterviewIdParams,
 } from "@/types";
+import {
+    runTechnicalSpecialist,
+    runBehavioralAnalyst,
+    runCultureExpert,
+    runGrowthCoach,
+    runOrchestrator,
+} from "@/lib/mas/agents";
 
 export interface CreateFeedbackParams {
     interviewId: string;
@@ -22,57 +29,79 @@ export interface CreateFeedbackParams {
         eyeContact: number;
         timestamp: number;
     }[];
+    totalQuestions?: number;
+    isEarlyTermination?: boolean;
 }
 
 export async function createFeedback(params: CreateFeedbackParams) {
-    const { interviewId, userId, transcript, feedbackId, emotionalData } =
-        params;
+    const {
+        interviewId,
+        userId,
+        transcript,
+        feedbackId,
+        emotionalData,
+        totalQuestions = 1,
+        isEarlyTermination = false,
+    } = params;
 
     try {
+        const interview = await prisma.interview.findUnique({
+            where: { id: interviewId },
+        });
+
+        if (!interview) {
+            throw new Error("Interview not found");
+        }
+
         const formattedTranscript = transcript
             .map(
                 (sentence: { role: string; content: string }) =>
-                    `- ${sentence.role}: ${sentence.content}\n`,
+                    `${sentence.role}: ${sentence.content}`,
             )
-            .join("");
+            .join("\n");
 
-        const emotionalContext =
-            emotionalData && emotionalData.length > 0
-                ? `\nBehavioral Data:
-               - Average Eye Contact: ${((emotionalData.reduce((acc: number, curr: any) => acc + curr.eyeContact, 0) / emotionalData.length) * 100).toFixed(1)}%
-               - Confidence Trend: ${emotionalData.map((d: any) => d.confidence.toFixed(2)).join(", ")}
-               Use this data to provide specific "Body Language Coaching" tips in the 'behavioralTips' array.`
-                : "";
+        console.log("Starting MAS Workflow...");
 
-        const { object } = await generateObject({
-            model: google("gemini-2.5-flash"),
-            schema: feedbackSchema,
-            prompt: `
-        You are an AI interviewer analyzing a mock interview. Your task is to evaluate the candidate based on structured categories. Be thorough and detailed in your analysis. Don't be lenient with the candidate. If there are mistakes or areas for improvement, point them out.
-        Transcript:
-        ${formattedTranscript}
-        ${emotionalContext}
+        // Run specialized agents in parallel
+        const [techResult, behavioralResult, cultureResult] = await Promise.all(
+            [
+                runTechnicalSpecialist(formattedTranscript, interview.role),
+                runBehavioralAnalyst(formattedTranscript, emotionalData),
+                runCultureExpert(formattedTranscript, interview.role),
+            ],
+        );
 
-        Please score the candidate from 0 to 100 in the following areas. Do not add categories other than the ones provided:
-        - **Communication Skills**: Clarity, articulation, structured responses.
-        - **Technical Knowledge**: Understanding of key concepts for the role.
-        - **Problem-Solving**: Ability to analyze problems and propose solutions.
-        - **Cultural & Role Fit**: Alignment with company values and job role.
-        - **Confidence & Clarity**: Confidence in responses, engagement, and clarity.
-        `,
-            system: "You are a professional interviewer analyzing a mock interview. Your task is to evaluate the candidate based on structured categories",
-        });
+        console.log("Specialized analysis completed. Running Growth Coach...");
+
+        // Run Growth Coach based on specialized analysis
+        const { object: growthCoachReport } = await runGrowthCoach(
+            techResult.object,
+            behavioralResult.object,
+            cultureResult.object,
+        );
+
+        console.log("Growth Coach completed. Running Orchestrator...");
+
+        // Orchestrate final feedback
+        const { object: orchestratedFeedback } = await runOrchestrator(
+            interview.role,
+            techResult.object,
+            behavioralResult.object,
+            cultureResult.object,
+            growthCoachReport,
+        );
 
         const feedbackData = {
             interviewId: interviewId,
             userId: userId,
-            totalScore: object.totalScore,
-            categoryScores: object.categoryScores,
-            strengths: object.strengths,
-            areasForImprovement: object.areasForImprovement,
-            finalAssessment: object.finalAssessment,
+            totalScore: orchestratedFeedback.totalScore,
+            categoryScores: orchestratedFeedback.categoryScores,
+            strengths: orchestratedFeedback.strengths,
+            areasForImprovement: orchestratedFeedback.areasForImprovement,
+            finalAssessment: orchestratedFeedback.finalAssessment,
             emotionalAnalysis: emotionalData || [],
-            behavioralTips: (object as any).behavioralTips || [], // We expect Gemini to fill this based on the prompt advice if we update schema
+            behavioralTips: orchestratedFeedback.behavioralTips || [],
+            learningPath: orchestratedFeedback.learningPath || [],
         };
 
         let feedback;
@@ -92,7 +121,7 @@ export async function createFeedback(params: CreateFeedbackParams) {
 
         return { success: true, feedbackId: feedback.id };
     } catch (error) {
-        console.error("Error saving feedback:", error);
+        console.error("Error in MAS Workflow:", error);
         return { success: false };
     }
 }
