@@ -162,11 +162,19 @@ const Footer = () => {
                                 </span>
                                 <span className="size-1 rounded-full bg-primary-200/40" />
                                 <span className="text-[9px] font-black text-light-600 uppercase">
-                                    Gemini 1.5 Pro
+                                    Gemini 2.5 Pro
                                 </span>
                                 <span className="size-1 rounded-full bg-primary-200/40" />
                                 <span className="text-[9px] font-black text-light-600 uppercase">
                                     Vapi.ai
+                                </span>
+                                <span className="size-1 rounded-full bg-primary-200/40" />
+                                <span className="text-[9px] font-black text-light-600 uppercase">
+                                    Deepgram
+                                </span>
+                                <span className="size-1 rounded-full bg-primary-200/40" />
+                                <span className="text-[9px] font-black text-light-600 uppercase">
+                                    ElevenLabs
                                 </span>
                             </div>
                         </div>

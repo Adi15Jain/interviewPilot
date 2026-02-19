@@ -12,6 +12,7 @@ import {
 import { ChevronRight, Sparkles } from "lucide-react";
 import ScoreTrendChart from "@/components/ScoreTrendChart";
 import CategoryProgress from "@/components/CategoryProgress";
+import FeaturesShowcase from "@/components/FeaturesShowcase";
 
 const Home = async () => {
     const user = await getCurrentUser();
@@ -144,6 +145,8 @@ const Home = async () => {
                 </div>
             </section>
 
+            <FeaturesShowcase />
+
             {/* Content Sections */}
             <div className="flex flex-col gap-16">
                 {hasPastInterviews && (
@@ -193,7 +196,7 @@ const Home = async () => {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {hasPastInterviews ? (
-                            userInterviews?.map((interview) => {
+                            userInterviews?.slice(0, 3).map((interview) => {
                                 const feedback = feedbacks?.find(
                                     (f) => f.interviewId === interview.id,
                                 );
