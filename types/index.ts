@@ -29,6 +29,7 @@ export interface Interview {
     createdAt: string;
     userId: string;
     type: string;
+    language: string;
     finalized: boolean;
 }
 

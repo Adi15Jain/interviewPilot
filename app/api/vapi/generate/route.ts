@@ -13,16 +13,25 @@ export async function POST(request: Request) {
             level: requestBody.level,
         });
 
-        const { type, role, level, techstack, amount, userid, jobDescription } =
-            requestBody as {
-                type: string;
-                role: string;
-                level: string;
-                techstack: string | string[];
-                amount: string;
-                userid: string;
-                jobDescription?: string;
-            };
+        const {
+            type,
+            role,
+            level,
+            techstack,
+            amount,
+            userid,
+            jobDescription,
+            language,
+        } = requestBody as {
+            type: string;
+            role: string;
+            level: string;
+            techstack: string | string[];
+            amount: string;
+            userid: string;
+            jobDescription?: string;
+            language?: string;
+        };
 
         // Validate amount
         const questionAmount = parseInt(amount);
@@ -68,9 +77,11 @@ export async function POST(request: Request) {
         Experience level: ${level}
         Tech stack: ${techstack}
         Focus: ${type}
+        Language: ${language || "English"}
         ${resumeContext}
         ${jdContext}
         
+        IMPORTANT: Your output MUST be in ${language || "English"}.
         IMPORTANT: Return ONLY a valid JSON array of strings. No additional text, no markdown, no explanations.
         Format: ["Question 1", "Question 2", "Question 3"]
         
@@ -154,6 +165,7 @@ export async function POST(request: Request) {
                 techstack: techstackArray,
                 questions: questions,
                 jobDescription: jobDescription || null,
+                language: language || "en",
                 userId: userid,
                 finalized: true,
                 coverImage: getInterviewCover("", role.trim()), // Will be updated by ID if needed, or use role

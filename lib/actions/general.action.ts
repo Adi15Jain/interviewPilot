@@ -65,9 +65,21 @@ export async function createFeedback(params: CreateFeedbackParams) {
         // Run specialized agents in parallel
         const [techResult, behavioralResult, cultureResult] = await Promise.all(
             [
-                runTechnicalSpecialist(formattedTranscript, interview.role),
-                runBehavioralAnalyst(formattedTranscript, emotionalData),
-                runCultureExpert(formattedTranscript, interview.role),
+                runTechnicalSpecialist(
+                    formattedTranscript,
+                    interview.role,
+                    interview.language,
+                ),
+                runBehavioralAnalyst(
+                    formattedTranscript,
+                    emotionalData,
+                    interview.language,
+                ),
+                runCultureExpert(
+                    formattedTranscript,
+                    interview.role,
+                    interview.language,
+                ),
             ],
         );
 
@@ -78,6 +90,7 @@ export async function createFeedback(params: CreateFeedbackParams) {
             techResult.object,
             behavioralResult.object,
             cultureResult.object,
+            interview.language,
         );
 
         console.log("Growth Coach completed. Running Orchestrator...");
@@ -89,6 +102,7 @@ export async function createFeedback(params: CreateFeedbackParams) {
             behavioralResult.object,
             cultureResult.object,
             growthCoachReport,
+            interview.language,
         );
 
         const feedbackData = {
@@ -158,9 +172,11 @@ export async function getFeedbackByInterviewId(
 
         return {
             ...feedback,
-            categoryScores: feedback.categoryScores as any,
+            categoryScores: (feedback.categoryScores as any) || [],
+            learningPath: (feedback.learningPath as any) || [],
+            emotionalAnalysis: (feedback.emotionalAnalysis as any) || [],
             createdAt: feedback.createdAt.toISOString(),
-        } as Feedback;
+        } as unknown as Feedback;
     } catch (error) {
         console.error("Error getting feedback:", error);
         return null;
@@ -236,13 +252,15 @@ export async function getFeedbacksByUserId(
 
         return feedbacks.map((feedback) => ({
             ...feedback,
-            categoryScores: feedback.categoryScores as any,
+            categoryScores: (feedback.categoryScores as any) || [],
+            learningPath: (feedback.learningPath as any) || [],
+            emotionalAnalysis: (feedback.emotionalAnalysis as any) || [],
             createdAt: feedback.createdAt.toISOString(),
             interview: {
                 ...feedback.interview,
                 createdAt: feedback.interview.createdAt.toISOString(),
             },
-        }));
+        })) as any[];
     } catch (error) {
         console.error("Error getting user feedbacks:", error);
         return null;

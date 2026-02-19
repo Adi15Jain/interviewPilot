@@ -97,31 +97,95 @@ export const mappings = {
     "aws amplify": "amplify",
 };
 
-export const interviewer: CreateAssistantDTO = {
-    name: "Interviewer",
-    firstMessage:
-        "Hello! Thank you for taking the time to speak with me today. I'm excited to learn more about you and your experience.",
-    transcriber: {
-        provider: "deepgram",
-        model: "nova-2",
-        language: "en",
-    },
-    voice: {
-        provider: "11labs",
-        voiceId: "sarah",
-        stability: 0.4,
-        similarityBoost: 0.8,
-        speed: 0.9,
-        style: 0.5,
-        useSpeakerBoost: true,
-    },
-    model: {
-        provider: "openai",
-        model: "gpt-4",
-        messages: [
-            {
-                role: "system",
-                content: `You are a professional job interviewer conducting a real-time voice interview with a candidate. Your goal is to assess their qualifications, motivation, and fit for the role.
+export const SUPPORTED_LANGUAGES = [
+    { code: "en", name: "English", flag: "🇺🇸", locale: "en-US" },
+    { code: "es", name: "Spanish", flag: "🇪🇸", locale: "es-ES" },
+    { code: "fr", name: "French", flag: "🇫🇷", locale: "fr-FR" },
+    { code: "de", name: "German", flag: "🇩🇪", locale: "de-DE" },
+    { code: "hi", name: "Hindi", flag: "🇮🇳", locale: "hi-IN" },
+    { code: "ja", name: "Japanese", flag: "🇯🇵", locale: "ja-JP" },
+    { code: "zh", name: "Chinese", flag: "🇨🇳", locale: "zh-CN" },
+];
+
+// Native first messages for each language
+const FIRST_MESSAGES: Record<string, string> = {
+    en: "Hello! Thank you for taking the time to speak with me today. I'm excited to learn more about you and your experience.",
+    es: "¡Hola! Gracias por tomarse el tiempo de hablar conmigo hoy. Estoy emocionado de conocer más sobre usted y su experiencia.",
+    fr: "Bonjour ! Merci de prendre le temps de discuter avec moi aujourd'hui. Je suis ravi d'en apprendre davantage sur vous et votre expérience.",
+    de: "Hallo! Vielen Dank, dass Sie sich heute die Zeit nehmen, mit mir zu sprechen. Ich freue mich darauf, mehr über Sie und Ihre Erfahrung zu erfahren.",
+    hi: "नमस्ते! आज मुझसे बात करने के लिए समय निकालने के लिए धन्यवाद। मैं आपके और आपके अनुभव के बारे में और जानने के लिए उत्साहित हूँ।",
+    ja: "こんにちは！本日はお時間をいただきありがとうございます。あなたのことやご経験について詳しくお伺いできることを楽しみにしています。",
+    zh: "你好！感谢您今天抽出时间与我交谈。我很期待了解更多关于您和您的经验。",
+};
+
+// Deepgram transcriber language codes (nova-2 supported)
+const DEEPGRAM_LANGUAGE_CODES: Record<string, string> = {
+    en: "en",
+    es: "es",
+    fr: "fr",
+    de: "de",
+    hi: "hi",
+    ja: "ja",
+    zh: "zh",
+};
+
+export const getInterviewerConfig = (
+    language: string = "en",
+): CreateAssistantDTO => {
+    const langConfig =
+        SUPPORTED_LANGUAGES.find((l) => l.code === language) ||
+        SUPPORTED_LANGUAGES[0];
+
+    const isEnglish = language === "en";
+    const deepgramLang = DEEPGRAM_LANGUAGE_CODES[language] || "en";
+
+    return {
+        name: "Interviewer",
+        firstMessage: FIRST_MESSAGES[language] || FIRST_MESSAGES.en,
+        transcriber: {
+            provider: "deepgram",
+            model: "nova-2",
+            language: deepgramLang as any,
+        },
+        voice: {
+            provider: "11labs",
+            voiceId: "sarah",
+            // Use multilingual v2 for non-English to get native accents
+            // Use turbo v2.5 for English for best latency
+            model: isEnglish ? "eleven_turbo_v2_5" : "eleven_multilingual_v2",
+            // Higher stability = more consistent, less glitchy multilingual speech
+            stability: isEnglish ? 0.4 : 0.7,
+            similarityBoost: 0.8,
+            speed: 0.9,
+            // Lower style for non-English to reduce stuttering on mixed-language content
+            style: isEnglish ? 0.5 : 0.1,
+            useSpeakerBoost: true,
+        } as any,
+        model: {
+            provider: "openai",
+            model: "gpt-4",
+            messages: [
+                {
+                    role: "system",
+                    content: `You are a professional female job interviewer named Sarah, conducting a real-time voice interview with a candidate.
+
+LANGUAGE & GRAMMAR RULES (CRITICAL):
+- Conduct the interview in ${langConfig.name}.
+- For YOUR OWN speech (first person), use feminine verb forms since you are a woman. Example in Hindi: "मैं पूछती हूँ", "मैं समझती हूँ", "मैंने देखा".
+- When addressing the CANDIDATE, ALWAYS use formal, gender-neutral, respectful forms. In Hindi: use "आप करेंगे", "आप बताइए", "आपने किया", "आप कैसे करें" — NEVER use "करेंगी" or "करोगी" or "करोगे" for the candidate. The formal "आप" conjugation is gender-neutral and professional.
+- Do NOT assume the candidate's gender in any language.
+
+TECHNICAL TERMS RULE:
+- KEEP all technical terms, acronyms, and proper nouns in English without translation or transliteration: React, Next.js, props, state, SSR, SSG, TypeScript, API, REST, GraphQL, Docker, Kubernetes, AWS, MongoDB, PostgreSQL, Git, CI/CD, hooks, components, etc.
+- Say each technical term exactly ONCE. NEVER repeat or echo a technical term twice in a row. For example, say "props" once, not "props, props".
+- Integrate English technical terms naturally into ${langConfig.name} sentences.
+
+SPEECH QUALITY RULES:
+- NEVER repeat any word or phrase twice consecutively. Each word should be said exactly once.
+- Keep sentences short and clear. Avoid complex compound sentences.
+- Pause naturally between thoughts instead of cramming everything together.
+
+Your goal is to assess the candidate's qualifications, motivation, and fit for the role.
 
 Interview Guidelines:
 Follow the structured question flow:
@@ -131,13 +195,13 @@ Engage naturally & react appropriately:
 Listen actively to responses and acknowledge them before moving forward.
 Ask brief follow-up questions if a response is vague or requires more detail.
 Keep the conversation flowing smoothly while maintaining control.
-Be professional, yet warm and welcoming:
 
+Be professional, yet warm and welcoming:
 Use official yet friendly language.
 Keep responses concise and to the point (like in a real voice interview).
 Avoid robotic phrasing—sound natural and conversational.
-Answer the candidate’s questions professionally:
 
+Answer the candidate's questions professionally:
 If asked about the role, company, or expectations, provide a clear and relevant answer.
 If unsure, redirect the candidate to HR for more details.
 
@@ -146,14 +210,15 @@ Thank the candidate for their time.
 Inform them that the company will reach out soon with feedback.
 End the conversation on a polite and positive note.
 
-
-- Be sure to be professional and polite.
-- Keep all your responses short and simple. Use official language, but be kind and welcoming.
-- This is a voice conversation, so keep your responses short, like in a real conversation. Don't ramble for too long.`,
-            },
-        ],
-    },
+- Keep all your responses short and simple. This is a voice conversation.
+- REMINDER: Gender-neutral "आप" forms for the candidate. Feminine forms only for yourself. Never repeat words.`,
+                },
+            ],
+        },
+    };
 };
+
+export const interviewer: CreateAssistantDTO = getInterviewerConfig("en");
 
 export const feedbackSchema = z.object({
     totalScore: z.number(),

@@ -8,8 +8,8 @@ import MASLoading from "./MASLoading";
 
 import { cn } from "@/lib/utils";
 import { vapi } from "@/lib/vapi.sdk";
-import { interviewer } from "@/constants";
-import { createFeedback } from "@/lib/actions/general.action";
+import { getInterviewerConfig } from "@/constants";
+import { createFeedback, getInterviewById } from "@/lib/actions/general.action";
 import { AgentProps } from "@/types";
 import { Message } from "@/types/vapi";
 
@@ -44,6 +44,19 @@ const Agent = ({
     const [emotionalData, setEmotionalData] = useState<any[]>([]);
     const [isEarlyTermination, setIsEarlyTermination] = useState(false);
     const [isGeneratingFeedback, setIsGeneratingFeedback] = useState(false);
+    const [interviewLanguage, setInterviewLanguage] = useState("en");
+
+    useEffect(() => {
+        const fetchInterview = async () => {
+            if (interviewId) {
+                const interview = await getInterviewById(interviewId);
+                if (interview) {
+                    setInterviewLanguage(interview.language || "en");
+                }
+            }
+        };
+        fetchInterview();
+    }, [interviewId]);
 
     const handleEmotionData = useCallback((data: any) => {
         setEmotionalData((prev) => [...prev, data]);
@@ -219,7 +232,9 @@ const Agent = ({
                 }
 
                 console.log("Starting VAPI assistant for interview");
-                await vapi.start(interviewer, {
+                const interviewerConfig =
+                    getInterviewerConfig(interviewLanguage);
+                await vapi.start(interviewerConfig, {
                     variableValues: {
                         questions: formattedQuestions,
                     },

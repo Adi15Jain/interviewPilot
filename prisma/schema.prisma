@@ -79,6 +79,7 @@ model Interview {
   questions    String[]
   jobDescription String?
   coverImage   String?
+  language     String     @default("en")
   finalized    Boolean    @default(false)
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt

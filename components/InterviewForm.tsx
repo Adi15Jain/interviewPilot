@@ -1,7 +1,7 @@
 "use client";
 
 import { z } from "zod";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -23,8 +23,13 @@ import {
 import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { InterviewFormProps } from "@/types";
-import { INTERVIEW_DOMAINS, InterviewDomain } from "@/constants";
+import {
+    INTERVIEW_DOMAINS,
+    InterviewDomain,
+    SUPPORTED_LANGUAGES,
+} from "@/constants";
 import FormField from "./FormField";
+import { Globe } from "lucide-react";
 
 const interviewFormSchema = z.object({
     role: z.string().min(2, "Role is required"),
@@ -33,6 +38,7 @@ const interviewFormSchema = z.object({
     techstack: z.string().min(1, "Tech stack is required"),
     amount: z.number().min(3).max(15),
     jobDescription: z.string().optional(),
+    language: z.string().default("en"),
 });
 
 const iconMap: Record<string, any> = {
@@ -63,8 +69,23 @@ const InterviewForm = ({ userId }: InterviewFormProps) => {
             techstack: "",
             amount: 5,
             jobDescription: "",
+            language: "en",
         },
     });
+
+    // Sync form language with global navbar language preference
+    useEffect(() => {
+        const stored = localStorage.getItem("interviewpilot-lang");
+        if (stored) form.setValue("language", stored);
+
+        const handleStorage = (e: StorageEvent) => {
+            if (e.key === "interviewpilot-lang" && e.newValue) {
+                form.setValue("language", e.newValue);
+            }
+        };
+        window.addEventListener("storage", handleStorage);
+        return () => window.removeEventListener("storage", handleStorage);
+    }, [form]);
 
     const onSubmit = async (data: z.infer<typeof interviewFormSchema>) => {
         try {
@@ -268,7 +289,7 @@ const InterviewForm = ({ userId }: InterviewFormProps) => {
                                     />
                                 </div>
 
-                                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-8 border-t border-white/10">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-8 border-t border-white/10">
                                     {/* Level */}
                                     <div className="flex flex-col gap-4">
                                         <label className="text-xs font-black text-primary-200 uppercase tracking-[0.2em]">
@@ -337,35 +358,76 @@ const InterviewForm = ({ userId }: InterviewFormProps) => {
                                         </div>
                                     </div>
 
-                                    {/* Amount */}
+                                    {/* Number of Questions */}
                                     <div className="flex flex-col gap-4">
                                         <label className="text-xs font-black text-primary-200 uppercase tracking-[0.2em]">
-                                            Intensity
+                                            No. of Questions
                                         </label>
-                                        <div className="flex flex-col h-full gap-5">
-                                            <div className="flex-1 flex flex-col justify-center items-center p-8 bg-primary-200/5 rounded-[2rem] border border-primary-200/20 relative overflow-hidden group/intensity">
-                                                <div className="absolute top-0 left-0 w-full h-1 bg-primary-200/20" />
-                                                <span className="text-6xl font-black text-white relative z-10 drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">
+                                        <div className="flex flex-col gap-4 bg-white/5 rounded-2xl p-5 border-2 border-transparent">
+                                            <div className="flex items-center justify-center">
+                                                <span className="text-4xl font-black text-primary-200 tabular-nums">
                                                     {form.watch("amount")}
                                                 </span>
-                                                <span className="text-xs text-primary-200 uppercase font-black tracking-widest mt-2 relative z-10">
-                                                    Questions
-                                                </span>
                                             </div>
-                                            <div className="px-2">
-                                                <input
-                                                    type="range"
-                                                    min="3"
-                                                    max="15"
-                                                    step="1"
-                                                    {...form.register(
+                                            <input
+                                                type="range"
+                                                min={3}
+                                                max={15}
+                                                step={1}
+                                                value={form.watch("amount")}
+                                                onChange={(e) =>
+                                                    form.setValue(
                                                         "amount",
-                                                        {
-                                                            valueAsNumber: true,
-                                                        },
-                                                    )}
-                                                    className="w-full accent-primary-200 cursor-pointer h-2 rounded-full bg-white/10 appearance-none shadow-[0_0_10px_rgba(202,197,254,0.1)]"
-                                                />
+                                                        Number(e.target.value),
+                                                    )
+                                                }
+                                                className="w-full h-2 rounded-full appearance-none cursor-pointer bg-white/10 accent-primary-200 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-primary-200 [&::-webkit-slider-thumb]:shadow-[0_0_12px_rgba(202,197,254,0.5)] [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:transition-all [&::-webkit-slider-thumb]:hover:scale-125"
+                                            />
+                                            <div className="flex justify-between text-xs text-light-400 font-medium">
+                                                <span>3</span>
+                                                <span>15</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Language Selection */}
+                                    <div className="flex flex-col gap-4">
+                                        <label className="text-xs font-black text-primary-200 uppercase tracking-[0.2em] flex items-center gap-2">
+                                            <Globe className="size-4" /> Native
+                                            Language
+                                        </label>
+                                        <div className="flex flex-col gap-2">
+                                            <div className="grid grid-cols-2 gap-2">
+                                                {SUPPORTED_LANGUAGES.map(
+                                                    (lang) => (
+                                                        <button
+                                                            key={lang.code}
+                                                            type="button"
+                                                            onClick={() =>
+                                                                form.setValue(
+                                                                    "language",
+                                                                    lang.code,
+                                                                )
+                                                            }
+                                                            className={`px-4 py-3 rounded-xl text-left transition-all border-2 flex items-center gap-3 ${
+                                                                form.watch(
+                                                                    "language",
+                                                                ) === lang.code
+                                                                    ? "bg-primary-200/10 border-primary-200 text-white"
+                                                                    : "bg-white/5 border-transparent text-light-400 hover:bg-white/10"
+                                                            }`}
+                                                        >
+                                                            <span className="text-xl">
+                                                                {lang.flag}
+                                                            </span>
+                                                            <div className="flex flex-col">
+                                                                <span className="text-xs font-bold leading-none">
+                                                                    {lang.name}
+                                                                </span>
+                                                            </div>
+                                                        </button>
+                                                    ),
+                                                )}
                                             </div>
                                         </div>
                                     </div>
