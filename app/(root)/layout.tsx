@@ -9,7 +9,7 @@ const RootLayout = async ({ children }: { children: React.ReactNode }) => {
     if (!user) redirect("/sign-in");
 
     return (
-        <main className="root-layout pattern">
+        <main className="root-layout">
             <Navbar />
             {children}
             <Footer />

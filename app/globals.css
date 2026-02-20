@@ -142,6 +142,11 @@
     html,
     body {
         @apply bg-background text-foreground;
+        background-image: url("/pattern.png");
+        background-attachment: fixed;
+        background-position: top center;
+        background-repeat: no-repeat;
+        background-size: cover;
         overflow-x: hidden !important;
         max-width: 100vw;
         position: relative;
@@ -312,7 +317,11 @@
 }
 
 @utility pattern {
-    @apply bg-[url('/pattern.png')] bg-top bg-no-repeat;
+    @apply opacity-100;
+}
+
+@utility text-gradient-premium {
+    @apply bg-gradient-to-r from-primary-200 to-primary-200 bg-clip-text text-transparent;
 }
 
 @utility blue-gradient-dark {

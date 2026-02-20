@@ -289,7 +289,9 @@ const FeaturesShowcase = () => {
                 </h2>
                 <p className="text-light-400 text-lg max-w-2xl">
                     A neural interview ecosystem powered by cutting-edge
-                    pipelines and multi-agent coordination.
+                    pipelines and
+                    <br />
+                    multi-agent coordination.
                 </p>
             </motion.div>
 
