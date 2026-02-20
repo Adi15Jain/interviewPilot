@@ -13,6 +13,7 @@ import { ChevronRight, Sparkles } from "lucide-react";
 import ScoreTrendChart from "@/components/ScoreTrendChart";
 import CategoryProgress from "@/components/CategoryProgress";
 import FeaturesShowcase from "@/components/FeaturesShowcase";
+import OnboardingFlow from "@/components/OnboardingFlow";
 
 const Home = async () => {
     const user = await getCurrentUser();
@@ -49,6 +50,11 @@ const Home = async () => {
         }))
         .sort((a, b) => b.score - a.score)
         .slice(0, 5);
+
+    // Show onboarding for new users
+    if (user && !user.onboardingComplete) {
+        return <OnboardingFlow userId={user.id} userName={user.name} />;
+    }
 
     return (
         <div className="flex flex-col gap-12 pb-20 animate-in fade-in duration-1000">

@@ -368,3 +368,207 @@ export async function getLeaderboard(limit: number = 50) {
         return [];
     }
 }
+
+export async function getRoleBenchmark(role: string, userId: string) {
+    try {
+        // Get all feedbacks for this role (across all users)
+        const roleFeedbacks = await prisma.feedback.findMany({
+            where: {
+                interview: { role: { equals: role, mode: "insensitive" } },
+            },
+            select: { totalScore: true, userId: true },
+        });
+
+        if (roleFeedbacks.length === 0) {
+            return {
+                roleAvg: 0,
+                userAvg: 0,
+                percentile: 50,
+                totalInterviews: 0,
+            };
+        }
+
+        // Role-wide average
+        const roleAvg = Math.round(
+            roleFeedbacks.reduce((acc, f) => acc + f.totalScore, 0) /
+                roleFeedbacks.length,
+        );
+
+        // User's average for this role
+        const userRoleFeedbacks = roleFeedbacks.filter(
+            (f) => f.userId === userId,
+        );
+        const userAvg =
+            userRoleFeedbacks.length > 0
+                ? Math.round(
+                      userRoleFeedbacks.reduce(
+                          (acc, f) => acc + f.totalScore,
+                          0,
+                      ) / userRoleFeedbacks.length,
+                  )
+                : 0;
+
+        // Percentile: how many unique users' averages are below this user's average
+        const userAvgMap: Record<string, number[]> = {};
+        roleFeedbacks.forEach((f) => {
+            if (!userAvgMap[f.userId]) userAvgMap[f.userId] = [];
+            userAvgMap[f.userId].push(f.totalScore);
+        });
+
+        const userAverages = Object.entries(userAvgMap).map(
+            ([uid, scores]) => ({
+                userId: uid,
+                avg: scores.reduce((a, b) => a + b, 0) / scores.length,
+            }),
+        );
+
+        const usersBelow = userAverages.filter(
+            (u) => u.userId !== userId && u.avg < userAvg,
+        ).length;
+        const totalUsers = userAverages.length;
+        const percentile =
+            totalUsers <= 1
+                ? 50
+                : Math.max(
+                      1,
+                      Math.round(
+                          ((totalUsers - usersBelow) / totalUsers) * 100,
+                      ),
+                  );
+
+        return {
+            roleAvg,
+            userAvg,
+            percentile,
+            totalInterviews: roleFeedbacks.length,
+        };
+    } catch (error) {
+        console.error("Error getting role benchmark:", error);
+        return { roleAvg: 0, userAvg: 0, percentile: 50, totalInterviews: 0 };
+    }
+}
+
+/* ── Community Question Bank ── */
+
+export async function submitCommunityQuestion(data: {
+    question: string;
+    company: string;
+    role: string;
+    tags: string[];
+    userId: string;
+}) {
+    try {
+        const question = await prisma.communityQuestion.create({
+            data: {
+                question: data.question,
+                company: data.company,
+                role: data.role,
+                tags: data.tags,
+                userId: data.userId,
+            },
+        });
+        return { success: true, question };
+    } catch (error) {
+        console.error("Error submitting community question:", error);
+        return { success: false };
+    }
+}
+
+export async function getCommunityQuestions(filters?: {
+    sortBy?: "newest" | "popular";
+    company?: string;
+    role?: string;
+    page?: number;
+    userId?: string;
+}) {
+    try {
+        const page = filters?.page || 1;
+        const perPage = 20;
+        const skip = (page - 1) * perPage;
+
+        const where: any = {};
+        if (filters?.company)
+            where.company = {
+                equals: filters.company,
+                mode: "insensitive",
+            };
+        if (filters?.role)
+            where.role = { equals: filters.role, mode: "insensitive" };
+
+        const orderBy =
+            filters?.sortBy === "popular"
+                ? { upvotes: "desc" as const }
+                : { createdAt: "desc" as const };
+
+        const [questions, total] = await Promise.all([
+            prisma.communityQuestion.findMany({
+                where,
+                orderBy,
+                skip,
+                take: perPage,
+                include: {
+                    user: { select: { name: true, image: true } },
+                    votes: filters?.userId
+                        ? {
+                              where: { userId: filters.userId },
+                              select: { id: true },
+                          }
+                        : false,
+                },
+            }),
+            prisma.communityQuestion.count({ where }),
+        ]);
+
+        return {
+            questions: questions.map((q) => ({
+                ...q,
+                hasVoted: Array.isArray(q.votes) && q.votes.length > 0,
+                votes: undefined,
+            })),
+            total,
+            totalPages: Math.ceil(total / perPage),
+        };
+    } catch (error) {
+        console.error("Error getting community questions:", error);
+        return { questions: [], total: 0, totalPages: 0 };
+    }
+}
+
+export async function toggleUpvote(questionId: string, userId: string) {
+    try {
+        const existingVote = await prisma.communityVote.findUnique({
+            where: {
+                questionId_userId: { questionId, userId },
+            },
+        });
+
+        if (existingVote) {
+            // Remove vote
+            await prisma.$transaction([
+                prisma.communityVote.delete({
+                    where: { id: existingVote.id },
+                }),
+                prisma.communityQuestion.update({
+                    where: { id: questionId },
+                    data: { upvotes: { decrement: 1 } },
+                }),
+            ]);
+            return { success: true, action: "removed" };
+        } else {
+            // Add vote
+            await prisma.$transaction([
+                prisma.communityVote.create({
+                    data: { questionId, userId },
+                }),
+                prisma.communityQuestion.update({
+                    where: { id: questionId },
+                    data: { upvotes: { increment: 1 } },
+                }),
+            ]);
+            return { success: true, action: "added" };
+        }
+    } catch (error) {
+        console.error("Error toggling upvote:", error);
+        return { success: false, action: "error" };
+    }
+}

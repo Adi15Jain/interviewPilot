@@ -127,6 +127,33 @@ export async function getCurrentUser(): Promise<User | null> {
     try {
         const session = await auth();
         if (session?.user) {
+            // Fetch full user data from DB to include onboardingComplete
+            const dbUser = await prisma.user.findUnique({
+                where: { id: session.user.id! },
+                select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    image: true,
+                    profileURL: true,
+                    createdAt: true,
+                    onboardingComplete: true,
+                },
+            });
+            if (dbUser) {
+                return {
+                    id: dbUser.id,
+                    name: dbUser.name,
+                    email: dbUser.email,
+                    image:
+                        dbUser.image ||
+                        dbUser.profileURL ||
+                        session.user.image ||
+                        undefined,
+                    createdAt: dbUser.createdAt,
+                    onboardingComplete: dbUser.onboardingComplete,
+                };
+            }
             return {
                 id: session.user.id!,
                 name: session.user.name || "",
@@ -156,6 +183,7 @@ export async function getCurrentUser(): Promise<User | null> {
                 image: true,
                 profileURL: true,
                 createdAt: true,
+                onboardingComplete: true,
             },
         });
 
@@ -167,6 +195,7 @@ export async function getCurrentUser(): Promise<User | null> {
             email: user.email,
             image: user.image || user.profileURL || undefined,
             createdAt: user.createdAt,
+            onboardingComplete: user.onboardingComplete,
         };
     } catch (error) {
         console.error("Error getting current user:", error);
@@ -201,5 +230,18 @@ export async function getRandomUsers(limit: number = 4): Promise<User[]> {
     } catch (error) {
         console.error("Error getting random users:", error);
         return [];
+    }
+}
+
+export async function completeOnboarding(userId: string) {
+    try {
+        await prisma.user.update({
+            where: { id: userId },
+            data: { onboardingComplete: true },
+        });
+        return { success: true };
+    } catch (error) {
+        console.error("Error completing onboarding:", error);
+        return { success: false };
     }
 }

@@ -111,6 +111,21 @@ const NavbarClient = ({ user, UserProfileButton }: NavbarClientProps) => {
                             }`}
                         />
                     </Link>
+                    <Link
+                        href="/community"
+                        className={`relative text-light-100 hover:text-white transition-all duration-300 font-semibold group ${
+                            isActive("/community") ? "text-white" : ""
+                        }`}
+                    >
+                        Community
+                        <span
+                            className={`absolute -bottom-1 left-0 h-0.5 bg-primary-200 transition-all duration-500 shadow-[0_0_10px_rgba(202,197,254,0.8)] ${
+                                isActive("/community")
+                                    ? "w-full"
+                                    : "w-0 group-hover:w-full"
+                            }`}
+                        />
+                    </Link>
                 </div>
 
                 {/* Language Switcher */}

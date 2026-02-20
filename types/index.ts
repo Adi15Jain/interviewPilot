@@ -74,6 +74,7 @@ export interface User {
     id: string;
     image?: string;
     createdAt?: Date;
+    onboardingComplete?: boolean;
 }
 
 export interface InterviewCardProps {

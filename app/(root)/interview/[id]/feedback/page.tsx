@@ -1,11 +1,20 @@
 import dayjs from "dayjs";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { ChevronLeft, RotateCcw, Quote, Target } from "lucide-react";
+import {
+    ChevronLeft,
+    RotateCcw,
+    Quote,
+    Target,
+    TrendingUp,
+    Users,
+    Award,
+} from "lucide-react";
 
 import {
     getFeedbackByInterviewId,
     getInterviewById,
+    getRoleBenchmark,
 } from "@/lib/actions/general.action";
 import { Button } from "@/components/ui/button";
 import { getCurrentUser } from "@/lib/actions/auth.action";
@@ -16,6 +25,7 @@ import InsightCard from "@/components/InsightCard";
 import BehavioralAnalysis from "@/components/BehavioralAnalysis";
 import LearningHub from "@/components/LearningHub";
 import CareerRoadmap from "@/components/CareerRoadmap";
+import ReportCard from "@/components/ReportCard";
 import { RouteParams } from "@/types";
 
 const Feedback = async ({ params }: RouteParams) => {
@@ -26,10 +36,10 @@ const Feedback = async ({ params }: RouteParams) => {
     const interview = await getInterviewById(id);
     if (!interview) redirect("/");
 
-    const feedback = await getFeedbackByInterviewId({
-        interviewId: id,
-        userId: user.id,
-    });
+    const [feedback, benchmark] = await Promise.all([
+        getFeedbackByInterviewId({ interviewId: id, userId: user.id }),
+        getRoleBenchmark(interview.role, user.id),
+    ]);
 
     if (!feedback) redirect("/");
 
@@ -92,6 +102,88 @@ const Feedback = async ({ params }: RouteParams) => {
                         </Button>
                     </div>
                 </div>
+
+                {/* Industry Benchmark Bar */}
+                {benchmark.totalInterviews > 0 && (
+                    <div className="glass-card-extreme p-8 rounded-[2.5rem] animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200">
+                        <div className="flex flex-col gap-6">
+                            <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-3">
+                                    <div className="p-2.5 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                                        <TrendingUp className="size-5" />
+                                    </div>
+                                    <div>
+                                        <h4 className="text-xs font-black uppercase tracking-[0.3em] text-light-400">
+                                            Industry Benchmark
+                                        </h4>
+                                        <p className="text-[10px] text-light-600 font-bold uppercase tracking-wider">
+                                            vs. all {interview.role} interviews
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className="flex items-center gap-4">
+                                    <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10">
+                                        <Users className="size-3.5 text-light-400" />
+                                        <span className="text-xs font-black text-light-100 tabular-nums">
+                                            {benchmark.totalInterviews} sessions
+                                        </span>
+                                    </div>
+                                    <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-primary-200/10 border border-primary-200/20">
+                                        <Award className="size-3.5 text-primary-200" />
+                                        <span className="text-xs font-black text-primary-200">
+                                            Top {benchmark.percentile}%
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Visual Comparison Bar */}
+                            <div className="flex flex-col gap-3">
+                                <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-light-600">
+                                    <span>Score Distribution</span>
+                                    <span>100%</span>
+                                </div>
+                                <div className="relative h-8 bg-white/5 rounded-full overflow-hidden border border-white/5">
+                                    {/* Role Average Marker */}
+                                    <div
+                                        className="absolute top-0 bottom-0 w-0.5 bg-light-400/60 z-20"
+                                        style={{
+                                            left: `${benchmark.roleAvg}%`,
+                                        }}
+                                    />
+                                    <div
+                                        className="absolute -top-6 z-20 flex flex-col items-center"
+                                        style={{
+                                            left: `${benchmark.roleAvg}%`,
+                                            transform: "translateX(-50%)",
+                                        }}
+                                    >
+                                        <span className="text-[9px] font-black text-light-400 whitespace-nowrap">
+                                            Avg: {benchmark.roleAvg}%
+                                        </span>
+                                    </div>
+                                    {/* User Score Bar */}
+                                    <div
+                                        className="absolute inset-y-0 left-0 bg-gradient-to-r from-primary-200/40 to-primary-200/80 rounded-full transition-all duration-1000"
+                                        style={{
+                                            width: `${feedback.totalScore}%`,
+                                        }}
+                                    />
+                                    <div
+                                        className="absolute inset-y-0 flex items-center z-10"
+                                        style={{
+                                            left: `${Math.min(feedback.totalScore, 92)}%`,
+                                        }}
+                                    >
+                                        <span className="text-[10px] font-black text-white ml-2 whitespace-nowrap">
+                                            You: {feedback.totalScore}%
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
 
                 {/* Tier 1: Core Metrics Snapshot */}
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
@@ -246,6 +338,23 @@ const Feedback = async ({ params }: RouteParams) => {
                             items={feedback.areasForImprovement || []}
                         />
                     </div>
+                </div>
+
+                {/* Tier 4: Export & Share */}
+                <div className="flex flex-col gap-6">
+                    <h3 className="text-lg font-black uppercase tracking-[0.5em] text-light-600">
+                        Export Report
+                    </h3>
+                    <ReportCard
+                        userName={user.name}
+                        role={interview.role}
+                        date={dayjs(feedback.createdAt).format("MMM D, YYYY")}
+                        totalScore={feedback.totalScore}
+                        categoryScores={(feedback.categoryScores as any) || []}
+                        strengths={feedback.strengths || []}
+                        finalAssessment={feedback.finalAssessment}
+                        benchmarkPercentile={benchmark.percentile}
+                    />
                 </div>
             </div>
         </div>

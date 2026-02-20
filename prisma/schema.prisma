@@ -26,6 +26,9 @@ model User {
   sessions      Session[]
   interviews    Interview[]
   feedback      Feedback[]
+  communityQuestions CommunityQuestion[]
+  communityVotes    CommunityVote[]
+  onboardingComplete Boolean @default(false)
   
   @@map("users")
 }
@@ -116,4 +119,38 @@ model Feedback {
   @@unique([interviewId, userId])
   @@index([interviewId, userId])
   @@map("feedback")
-} 
+}
+
+model CommunityQuestion {
+  id        String   @id @default(cuid())
+  question  String
+  company   String
+  role      String
+  tags      String[]
+  upvotes   Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  votes     CommunityVote[]
+  
+  @@index([createdAt(sort: Desc)])
+  @@index([upvotes(sort: Desc)])
+  @@map("community_questions")
+}
+
+model CommunityVote {
+  id         String   @id @default(cuid())
+  createdAt  DateTime @default(now())
+  
+  questionId String
+  question   CommunityQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  
+  userId     String
+  user       User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@unique([questionId, userId])
+  @@map("community_votes")
+}
