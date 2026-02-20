@@ -126,7 +126,7 @@ const NavbarClient = ({ user, UserProfileButton }: NavbarClientProps) => {
                     </button>
 
                     {langOpen && (
-                        <div className="absolute top-full right-0 mt-2 w-48 bg-[#0a0d14]/95 backdrop-blur-xl border border-white/10 rounded-xl shadow-[0_12px_40px_rgba(0,0,0,0.6)] overflow-hidden z-[100] animate-in fade-in slide-in-from-top-2 duration-200">
+                        <div className="absolute top-full right-0 mt-2 w-48 bg-[#0a0d14] backdrop-blur-xl border border-white/10 rounded-xl shadow-[0_12px_40px_rgba(0,0,0,0.6)] overflow-hidden z-[100] animate-in fade-in slide-in-from-top-2 duration-200">
                             {SUPPORTED_LANGUAGES.map((lang) => (
                                 <button
                                     key={lang.code}

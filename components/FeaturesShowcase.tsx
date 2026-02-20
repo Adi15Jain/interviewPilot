@@ -279,9 +279,9 @@ const FeaturesShowcase = () => {
                 transition={{ duration: 0.7 }}
                 className="flex flex-col gap-2 relative z-10 text-center items-center"
             >
-                <div className="badge-institutional mb-2">
-                    <Zap className="size-3 text-primary-200" />
-                    <span>Advanced Architecture</span>
+                <div className="flex badge-institutional">
+                    <Zap className="size-6 text-primary-200" />
+                    <span className="text-lg">Advanced Architecture</span>
                 </div>
                 <h2 className="text-4xl lg:text-5xl font-black text-white tracking-tight">
                     Engineered for{" "}
@@ -368,7 +368,7 @@ const FeaturesShowcase = () => {
                         <div className="flex flex-col gap-2">
                             <div className="flex items-center gap-3">
                                 <motion.div
-                                    className="size-2 rounded-full bg-green-400"
+                                    className="size-3 rounded-full bg-green-400"
                                     animate={{
                                         opacity: [1, 0.3, 1],
                                         scale: [1, 0.8, 1],
@@ -378,11 +378,11 @@ const FeaturesShowcase = () => {
                                         repeat: Infinity,
                                     }}
                                 />
-                                <span className="text-xs font-black text-green-400 uppercase tracking-widest">
+                                <span className="text-sm font-black text-green-400 uppercase tracking-widest">
                                     Live Pipeline
                                 </span>
                             </div>
-                            <h3 className="text-3xl font-black text-white leading-tight">
+                            <h3 className="text-4xl font-black text-white">
                                 Interview Lifecycle
                             </h3>
                             <p className="text-light-400 text-sm max-w-md">
