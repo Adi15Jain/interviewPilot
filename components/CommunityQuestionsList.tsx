@@ -242,7 +242,7 @@ const CommunityQuestionsList = ({
                                 <ArrowUp
                                     className={`size-5 ${q.hasVoted ? "fill-primary-200/20" : ""}`}
                                 />
-                                <span className="text-sm font-black tabular-nums">
+                                <span className="text-md font-black tabular-nums">
                                     {q.upvotes}
                                 </span>
                             </button>
@@ -255,13 +255,13 @@ const CommunityQuestionsList = ({
                                 <div className="flex flex-wrap items-center gap-3">
                                     <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20">
                                         <Building2 className="size-3 text-blue-400" />
-                                        <span className="text-[10px] font-black text-blue-400 uppercase">
+                                        <span className="text-[12px] font-black text-blue-400 uppercase">
                                             {q.company}
                                         </span>
                                     </div>
                                     <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20">
                                         <Briefcase className="size-3 text-emerald-400" />
-                                        <span className="text-[10px] font-black text-emerald-400 uppercase">
+                                        <span className="text-[12px] font-black text-emerald-400 uppercase">
                                             {q.role}
                                         </span>
                                     </div>
@@ -271,13 +271,13 @@ const CommunityQuestionsList = ({
                                             className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/5 border border-white/10"
                                         >
                                             <Tag className="size-2.5 text-light-600" />
-                                            <span className="text-[10px] font-bold text-light-400">
+                                            <span className="text-[11px] font-bold text-light-400">
                                                 {tag}
                                             </span>
                                         </div>
                                     ))}
                                 </div>
-                                <span className="text-[10px] text-light-600 font-bold">
+                                <span className="text-[12px] text-light-600 font-bold">
                                     by {q.user.name} •{" "}
                                     {new Date(q.createdAt).toLocaleDateString()}
                                 </span>
