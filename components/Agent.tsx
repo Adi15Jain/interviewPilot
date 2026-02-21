@@ -106,30 +106,28 @@ const Agent = ({
         };
 
         const onError = (error: any) => {
-            console.error("VAPI Error:", error);
-            setCallStatus(CallStatus.FINISHED);
-
-            // Show a more user-friendly error message
-            const errorMessage =
-                error?.message || error?.errorMsg || JSON.stringify(error);
-            if (errorMessage && typeof errorMessage === "string") {
-                if (
-                    errorMessage.includes("workflow") ||
-                    errorMessage.includes("assistant")
-                ) {
-                    console.error(
-                        "VAPI Configuration Error - Check your environment variables",
-                    );
-                }
-                if (
-                    errorMessage.includes("Meeting has ended") ||
-                    errorMessage.includes("ejection")
-                ) {
-                    console.error(
-                        "VAPI Meeting Error - This could be due to workflow configuration or timeout",
-                    );
+            // Exhaustive logging — capture everything
+            console.error("VAPI Error — raw:", error);
+            console.error("VAPI Error — type:", typeof error);
+            console.error(
+                "VAPI Error — keys:",
+                error ? Object.keys(error) : "null/undefined",
+            );
+            try {
+                console.error(
+                    "VAPI Error — JSON:",
+                    JSON.stringify(error, Object.getOwnPropertyNames(error)),
+                );
+            } catch {
+                console.error("VAPI Error — not serializable");
+            }
+            // Log all enumerable and non-enumerable own properties
+            if (error && typeof error === "object") {
+                for (const key of Object.getOwnPropertyNames(error)) {
+                    console.error(`VAPI Error [${key}]:`, error[key]);
                 }
             }
+            setCallStatus(CallStatus.FINISHED);
         };
 
         vapi.on("call-start", onCallStart);
