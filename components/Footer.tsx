@@ -146,34 +146,34 @@ const Footer = () => {
 
                 {/* Academic Footer Bar */}
                 <div className="mt-20 pt-8 border-t border-white/5 flex flex-col items-center gap-6">
-                    <p className="text-light-600 text-[10px] font-black tracking-[0.3em] text-center uppercase">
+                    <p className="text-light-600 text-[14px] font-black tracking-[0.3em] text-center uppercase">
                         © {currentYear} INTERVIEW PILOT • PROUDLY DEVELOPED AT
                         CCSIT, TMU UNIVERSITY
                     </p>
                     <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-4">
                         <div className="flex items-center gap-2 group cursor-help">
-                            <span className="text-[9px] font-black text-light-800 uppercase tracking-widest group-hover:text-light-400 transition-colors">
+                            <span className="text-[12px] font-black text-light-800 uppercase tracking-widest group-hover:text-light-600 transition-colors">
                                 Powered by High-End LLMs
                             </span>
                             <div className="flex items-center gap-1.5">
-                                <span className="size-1 rounded-full bg-primary-200/40" />
-                                <span className="text-[9px] font-black text-light-600 uppercase">
+                                <span className="size-2 rounded-full bg-primary-200/40" />
+                                <span className="text-[12px] font-black text-light-600 uppercase">
                                     GPT-4o
                                 </span>
-                                <span className="size-1 rounded-full bg-primary-200/40" />
-                                <span className="text-[9px] font-black text-light-600 uppercase">
+                                <span className="size-2 rounded-full bg-primary-200/40" />
+                                <span className="text-[12px] font-black text-light-600 uppercase">
                                     Gemini 2.5 Pro
                                 </span>
-                                <span className="size-1 rounded-full bg-primary-200/40" />
-                                <span className="text-[9px] font-black text-light-600 uppercase">
+                                <span className="size-2 rounded-full bg-primary-200/40" />
+                                <span className="text-[12px] font-black text-light-600 uppercase">
                                     Vapi.ai
                                 </span>
-                                <span className="size-1 rounded-full bg-primary-200/40" />
-                                <span className="text-[9px] font-black text-light-600 uppercase">
+                                <span className="size-2 rounded-full bg-primary-200/40" />
+                                <span className="text-[12px] font-black text-light-600 uppercase">
                                     Deepgram
                                 </span>
-                                <span className="size-1 rounded-full bg-primary-200/40" />
-                                <span className="text-[9px] font-black text-light-600 uppercase">
+                                <span className="size-2 rounded-full bg-primary-200/40" />
+                                <span className="text-[12px] font-black text-light-600 uppercase">
                                     ElevenLabs
                                 </span>
                             </div>
