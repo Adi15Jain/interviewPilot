@@ -1,16 +1,16 @@
 "use server";
 
-import { cookies } from "next/headers";
-import { prisma } from "@/lib/prisma";
 import {
-    hashPassword,
-    verifyPassword,
     createToken,
-    verifyToken,
+    hashPassword,
     SESSION_DURATION,
+    verifyPassword,
+    verifyToken,
 } from "@/lib/auth";
-import { auth, signOut as nextAuthSignOut } from "@/lib/auth.config";
-import { User, SignInParams, SignUpParams } from "@/types";
+import { auth } from "@/lib/auth.config";
+import { prisma } from "@/lib/prisma";
+import { SignInParams, SignUpParams, User } from "@/types";
+import { cookies } from "next/headers";
 
 // Set session cookie (for credentials login fallback)
 export async function setSessionCookie(token: string) {
@@ -121,7 +121,7 @@ export async function signOut() {
     cookieStore.delete("session");
 }
 
-// Get current user - checks NextAuth session first, falls back to custom JWT
+// Get current user - checks NextAuth session first, then Bearer token, falls back to custom JWT cookie
 export async function getCurrentUser(): Promise<User | null> {
     // First check NextAuth session
     try {
@@ -165,13 +165,29 @@ export async function getCurrentUser(): Promise<User | null> {
         // NextAuth session not available, fall through to JWT check
     }
 
-    // Fallback: Check custom JWT cookie
-    const cookieStore = await cookies();
-    const sessionCookie = cookieStore.get("session")?.value;
-    if (!sessionCookie) return null;
+    // Try extracting from Authorization header (For Mobile API requests)
+    let token = null;
+    try {
+        const { headers } = await import("next/headers");
+        const headersList = await headers();
+        const authHeader = headersList.get("authorization");
+        if (authHeader && authHeader.startsWith("Bearer ")) {
+            token = authHeader.substring(7);
+        }
+    } catch (error) {
+        // Headers might not be available depending on context
+    }
+
+    // Fallback: Check custom JWT cookie if no Bearer token
+    if (!token) {
+        const cookieStore = await cookies();
+        token = cookieStore.get("session")?.value;
+    }
+
+    if (!token) return null;
 
     try {
-        const payload = await verifyToken(sessionCookie);
+        const payload = await verifyToken(token);
         if (!payload) return null;
 
         const user = await prisma.user.findUnique({

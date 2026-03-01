@@ -12,9 +12,14 @@ interface EmotionData {
 interface EmotionTrackerProps {
     onData: (data: EmotionData) => void;
     isActive: boolean;
+    onStream?: (stream: MediaStream | null) => void;
 }
 
-const EmotionTracker = ({ onData, isActive }: EmotionTrackerProps) => {
+const EmotionTracker = ({
+    onData,
+    isActive,
+    onStream,
+}: EmotionTrackerProps) => {
     const videoRef = useRef<HTMLVideoElement>(null);
     const lastVideoTimeRef = useRef(-1);
     const [faceLandmarker, setFaceLandmarker] = useState<FaceLandmarker | null>(
@@ -23,19 +28,67 @@ const EmotionTracker = ({ onData, isActive }: EmotionTrackerProps) => {
 
     useEffect(() => {
         const initMediaPipe = async () => {
-            const vision = await FilesetResolver.forVisionTasks(
-                "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm",
-            );
-            const landmarker = await FaceLandmarker.createFromOptions(vision, {
-                baseOptions: {
-                    modelAssetPath:
-                        "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task",
-                    delegate: "GPU",
-                },
-                runningMode: "VIDEO",
-                numFaces: 1,
-            });
-            setFaceLandmarker(landmarker);
+            // Suppress MediaPipe/TF WASM-level output during init
+            const suppressInit = (e: ErrorEvent) => {
+                const msg = String(e.message || e.error || "");
+                if (
+                    msg.includes("TensorFlow") ||
+                    msg.includes("XNNPACK") ||
+                    msg.includes("mediapipe") ||
+                    msg.includes("delegate")
+                ) {
+                    e.preventDefault();
+                    e.stopImmediatePropagation();
+                    return true;
+                }
+            };
+            window.addEventListener("error", suppressInit as any, true);
+
+            const origLog = console.log;
+            const origWarn = console.warn;
+            const origInfo = console.info;
+            const isMPNoise = (args: any[]) => {
+                const msg = args.join(" ");
+                return (
+                    msg.includes("TensorFlow") ||
+                    msg.includes("XNNPACK") ||
+                    msg.includes("Created") ||
+                    msg.includes("delegate")
+                );
+            };
+            console.log = (...args: any[]) => {
+                if (!isMPNoise(args)) origLog.apply(console, args);
+            };
+            console.warn = (...args: any[]) => {
+                if (!isMPNoise(args)) origWarn.apply(console, args);
+            };
+            console.info = (...args: any[]) => {
+                if (!isMPNoise(args)) origInfo.apply(console, args);
+            };
+
+            try {
+                const vision = await FilesetResolver.forVisionTasks(
+                    "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm",
+                );
+                const landmarker = await FaceLandmarker.createFromOptions(
+                    vision,
+                    {
+                        baseOptions: {
+                            modelAssetPath:
+                                "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task",
+                            delegate: "GPU",
+                        },
+                        runningMode: "VIDEO",
+                        numFaces: 1,
+                    },
+                );
+                setFaceLandmarker(landmarker);
+            } finally {
+                console.log = origLog;
+                console.warn = origWarn;
+                console.info = origInfo;
+                window.removeEventListener("error", suppressInit as any, true);
+            }
         };
 
         initMediaPipe();
@@ -54,6 +107,7 @@ const EmotionTracker = ({ onData, isActive }: EmotionTrackerProps) => {
                     });
                     if (videoRef.current) {
                         videoRef.current.srcObject = stream;
+                        onStream?.(stream);
 
                         // Wait for metadata and a short buffer before starting prediction
                         videoRef.current.onloadedmetadata = () => {
@@ -81,22 +135,46 @@ const EmotionTracker = ({ onData, isActive }: EmotionTrackerProps) => {
                 videoRef.current.currentTime > 0 &&
                 videoRef.current.currentTime !== lastVideoTimeRef.current
             ) {
-                // Temporarily mute console.error during detection to suppress
-                // MediaPipe WASM-level logging that triggers the Next.js dev overlay.
-                const originalConsoleError = console.error;
-                console.error = (...args: any[]) => {
-                    const msg = args.join(" ");
+                // Suppress MediaPipe WASM errors from reaching Next.js dev overlay
+                // by intercepting at the window level (before React error boundaries)
+                const suppressOverlay = (e: ErrorEvent) => {
+                    const msg = String(e.message || e.error || "");
                     if (
-                        msg.includes("ROI width") ||
-                        msg.includes("image_to_tensor") ||
-                        msg.includes("calculator_graph") ||
-                        msg.includes("CalculatorGraph::Run") ||
-                        msg.includes("Valid ROI") ||
-                        msg.includes("face_landmarker")
+                        msg.includes("ROI") ||
+                        msg.includes("mediapipe") ||
+                        msg.includes("calculator") ||
+                        msg.includes("TensorFlow") ||
+                        msg.includes("XNNPACK") ||
+                        msg.includes("face_landmarker") ||
+                        msg.includes("detectForVideo")
                     ) {
-                        return; // Suppress known MediaPipe WASM noise
+                        e.preventDefault();
+                        e.stopImmediatePropagation();
+                        return true;
                     }
+                };
+                window.addEventListener("error", suppressOverlay as any, true);
+
+                // Also mute console.error/warn for any JS-level MediaPipe noise
+                const originalConsoleError = console.error;
+                const originalConsoleWarn = console.warn;
+                const mediaPipeFilter = (msg: string) =>
+                    msg.includes("ROI width") ||
+                    msg.includes("image_to_tensor") ||
+                    msg.includes("calculator_graph") ||
+                    msg.includes("CalculatorGraph::Run") ||
+                    msg.includes("Valid ROI") ||
+                    msg.includes("face_landmarker") ||
+                    msg.includes("TensorFlow") ||
+                    msg.includes("XNNPACK") ||
+                    msg.includes("delegate");
+                console.error = (...args: any[]) => {
+                    if (mediaPipeFilter(args.join(" "))) return;
                     originalConsoleError.apply(console, args);
+                };
+                console.warn = (...args: any[]) => {
+                    if (mediaPipeFilter(args.join(" "))) return;
+                    originalConsoleWarn.apply(console, args);
                 };
 
                 try {
@@ -224,8 +302,14 @@ const EmotionTracker = ({ onData, isActive }: EmotionTrackerProps) => {
                 } catch {
                     // Silently ignore all MediaPipe detection errors
                 } finally {
-                    // Always restore console.error
+                    // Always restore console methods and remove error suppressor
                     console.error = originalConsoleError;
+                    console.warn = originalConsoleWarn;
+                    window.removeEventListener(
+                        "error",
+                        suppressOverlay as any,
+                        true,
+                    );
                 }
             }
             animationFrameId = requestAnimationFrame(predictWebcam);
@@ -238,6 +322,7 @@ const EmotionTracker = ({ onData, isActive }: EmotionTrackerProps) => {
             if (videoRef.current && videoRef.current.srcObject) {
                 const stream = videoRef.current.srcObject as MediaStream;
                 stream.getTracks().forEach((track) => track.stop());
+                onStream?.(null);
             }
         };
     }, [isActive, faceLandmarker, onData]);

@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import EmotionTracker from "./EmotionTracker";
 import MASLoading from "./MASLoading";
@@ -44,7 +44,11 @@ const Agent = ({
     const [emotionalData, setEmotionalData] = useState<any[]>([]);
     const [isEarlyTermination, setIsEarlyTermination] = useState(false);
     const [isGeneratingFeedback, setIsGeneratingFeedback] = useState(false);
+    const [interviewCompleted, setInterviewCompleted] = useState(false);
     const [interviewLanguage, setInterviewLanguage] = useState("en");
+    const [webcamStream, setWebcamStream] = useState<MediaStream | null>(null);
+    const autoDisconnectTimer = useRef<NodeJS.Timeout | null>(null);
+    const videoDisplayRef = useRef<HTMLVideoElement>(null);
 
     useEffect(() => {
         const fetchInterview = async () => {
@@ -62,6 +66,16 @@ const Agent = ({
         setEmotionalData((prev) => [...prev, data]);
     }, []);
 
+    const handleStream = useCallback((stream: MediaStream | null) => {
+        setWebcamStream(stream);
+    }, []);
+
+    useEffect(() => {
+        if (videoDisplayRef.current && webcamStream) {
+            videoDisplayRef.current.srcObject = webcamStream;
+        }
+    }, [webcamStream]);
+
     useEffect(() => {
         const onCallStart = () => {
             setCallStatus(CallStatus.ACTIVE);
@@ -69,6 +83,8 @@ const Agent = ({
 
         const onCallEnd = () => {
             console.log("VAPI call ended naturally");
+            // If VAPI ends the call on its own (AI finished), that's a completed interview
+            setInterviewCompleted(true);
             setCallStatus(CallStatus.FINISHED);
         };
 
@@ -83,7 +99,54 @@ const Agent = ({
                     role: message.role,
                     content: message.transcript,
                 };
-                setMessages((prev) => [...prev, newMessage]);
+                setMessages((prev) => {
+                    const updated = [...prev, newMessage];
+
+                    // Detect interview completion from assistant farewell
+                    if (message.role === "assistant") {
+                        // Only check after a reasonable number of exchanges
+                        // (at least 4 assistant messages = intro + a few Q&A rounds)
+                        const assistantMsgs = updated.filter(
+                            (m) => m.role === "assistant",
+                        );
+                        if (assistantMsgs.length >= 4) {
+                            const farewellPatterns = [
+                                /thank\s*(you|u).*time/i,
+                                /good\s*luck/i,
+                                /all\s*the\s*best/i,
+                                /wish\s*(you|u)/i,
+                                /reach\s*out/i,
+                                /it\s*was.*pleasure/i,
+                                /best\s*of\s*luck/i,
+                                /interview\s*(is|has).*(?:over|complete|end|conclude)/i,
+                                /that.*(?:all|end|wrap)/i,
+                                /we.*will.*(?:get back|reach|contact|follow up)/i,
+                            ];
+                            if (
+                                farewellPatterns.some((p) =>
+                                    p.test(message.transcript),
+                                )
+                            ) {
+                                console.log(
+                                    "Interview completion detected — auto-ending in 3s",
+                                );
+                                setInterviewCompleted(true);
+                                // Auto-disconnect after the farewell plays out
+                                if (!autoDisconnectTimer.current) {
+                                    autoDisconnectTimer.current = setTimeout(
+                                        () => {
+                                            setCallStatus(CallStatus.FINISHED);
+                                            vapi.stop();
+                                        },
+                                        3000,
+                                    );
+                                }
+                            }
+                        }
+                    }
+
+                    return updated;
+                });
             }
 
             // Handle other message types that might indicate workflow completion
@@ -187,11 +250,27 @@ const Agent = ({
                     // No messages, might be an error - stay on the page
                     console.log("No messages received, staying on page");
                 }
-            } else {
+            } else if (interviewCompleted) {
+                // Only generate feedback for completed interviews
                 handleGenerateFeedback(messages);
+            } else {
+                // Incomplete interview — skip feedback, redirect home
+                console.log(
+                    "Interview ended early or incomplete — skipping feedback generation",
+                );
+                router.push("/");
             }
         }
-    }, [messages, callStatus, feedbackId, interviewId, router, type, userId]);
+    }, [
+        messages,
+        callStatus,
+        feedbackId,
+        interviewId,
+        router,
+        type,
+        userId,
+        interviewCompleted,
+    ]);
 
     const handleCall = async () => {
         try {
@@ -250,7 +329,14 @@ const Agent = ({
     };
 
     const handleDisconnect = () => {
-        setIsEarlyTermination(true);
+        // Clear any pending auto-disconnect timer
+        if (autoDisconnectTimer.current) {
+            clearTimeout(autoDisconnectTimer.current);
+            autoDisconnectTimer.current = null;
+        }
+        if (!interviewCompleted) {
+            setIsEarlyTermination(true);
+        }
         setCallStatus(CallStatus.FINISHED);
         vapi.stop();
     };
@@ -309,13 +395,24 @@ const Agent = ({
                     <div className="card-content relative overflow-hidden p-10">
                         <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
                         <div className="relative">
-                            <Image
-                                src={profileImage || "/user-avatar.png"}
-                                alt="profile-image"
-                                width={120}
-                                height={120}
-                                className="rounded-full object-cover size-[120px] ring-4 ring-white/5 shadow-2xl"
-                            />
+                            {webcamStream ? (
+                                <video
+                                    ref={videoDisplayRef}
+                                    autoPlay
+                                    playsInline
+                                    muted
+                                    className="rounded-full object-cover size-[120px] ring-4 ring-white/5 shadow-2xl"
+                                    style={{ transform: "scaleX(-1)" }}
+                                />
+                            ) : (
+                                <Image
+                                    src={profileImage || "/user-avatar.png"}
+                                    alt="profile-image"
+                                    width={120}
+                                    height={120}
+                                    className="rounded-full object-cover size-[120px] ring-4 ring-white/5 shadow-2xl"
+                                />
+                            )}
                             <div className="absolute -bottom-1 -right-1 size-8 bg-success-100 rounded-full border-4 border-dark-200 flex items-center justify-center">
                                 <span className="size-2 bg-white rounded-full animate-pulse" />
                             </div>
@@ -388,10 +485,13 @@ const Agent = ({
                         >
                             <span className="absolute inset-0 bg-white/10 transition-transform translate-y-full group-hover:translate-y-0 duration-300" />
                             <span className="relative">
-                                {messages.filter((m) => m.role === "assistant")
-                                    .length >= (questions?.length || 0)
-                                    ? "Finish & Generate Report"
-                                    : "End Interview Early"}
+                                {interviewCompleted
+                                    ? "End Interview & Generate Feedback"
+                                    : messages.filter(
+                                            (m) => m.role === "assistant",
+                                        ).length >= (questions?.length || 0)
+                                      ? "Finish & Generate Report"
+                                      : "End Interview Early"}
                             </span>
                         </button>
                     )}
@@ -401,6 +501,7 @@ const Agent = ({
             <EmotionTracker
                 isActive={callStatus === CallStatus.ACTIVE}
                 onData={handleEmotionData}
+                onStream={handleStream}
             />
         </div>
     );
