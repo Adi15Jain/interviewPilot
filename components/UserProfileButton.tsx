@@ -35,7 +35,7 @@ const UserProfileButton = ({ user }: UserProfileButtonProps) => {
         // Clear custom JWT cookie (for email/password users)
         await customSignOut();
         // Clear NextAuth session (for Google users) and redirect
-        await nextAuthSignOut({ callbackUrl: "/sign-in" });
+        await nextAuthSignOut({ callbackUrl: "/" });
     };
 
     const initials = user.name

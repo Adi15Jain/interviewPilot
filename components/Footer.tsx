@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Github, Linkedin, Mail } from "lucide-react";
+import { Github, Linkedin } from "lucide-react";
 
 const Footer = () => {
     const currentYear = new Date().getFullYear();
@@ -29,23 +29,40 @@ const Footer = () => {
         },
     ];
 
+    const navLinks = [
+        { label: "Homepage", href: "/" },
+        { label: "Practice Lab", href: "/interview" },
+        { label: "Performance Hub", href: "/feedback" },
+        { label: "Leaderboard", href: "/leaderboard" },
+        { label: "Community", href: "/community" },
+    ];
+
+    const techStack = [
+        "GPT-4o",
+        "Gemini 2.5 Pro",
+        "Vapi.ai",
+        "Deepgram",
+        "ElevenLabs",
+    ];
+
     return (
-        <footer className="w-full border-t border-white/5 bg-[#020408]/40 backdrop-blur-xl mt-10 relative group/footer mesh-gradient">
-            <div className="max-w-7xl mx-auto px-12 max-sm:px-6 py-16 relative z-10">
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-16 lg:gap-24">
-                    {/* Brand & Institution Section */}
-                    <div className="flex flex-col gap-6 md:col-span-2">
+        <footer className="w-full border-t border-white/5 bg-[#020408]/40 backdrop-blur-xl mt-5 relative group/footer mesh-gradient">
+            <div className="max-w-7xl mx-auto px-6 md:px-12 py-10 relative z-10">
+                {/* Main Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-10 md:gap-16 lg:gap-24">
+                    {/* Brand & Institution */}
+                    <div className="flex flex-col gap-5 md:col-span-2">
                         <div className="flex flex-col gap-2">
                             <div className="flex items-center gap-2 group/logo w-fit">
-                                <h3 className="text-3xl font-black text-white tracking-tighter transition-all duration-300 group-hover/logo:text-primary-200">
+                                <h3 className="text-2xl md:text-3xl font-black text-white tracking-tighter transition-all duration-300 group-hover/logo:text-primary-200">
                                     InterviewPilot
                                     <span className="text-primary-200 group-hover/logo:text-white transition-colors">
                                         .
                                     </span>
                                 </h3>
                             </div>
-                            <div className="flex flex-col gap-1">
-                                <p className="text-primary-200/80 text-[12px] font-black uppercase tracking-[0.2em]">
+                            <div className="flex flex-col gap-0.5">
+                                <p className="text-primary-200/80 text-[11px] font-black uppercase tracking-[0.2em]">
                                     A Final Year Major Project
                                 </p>
                                 <p className="text-light-100 text-sm font-bold uppercase tracking-tight">
@@ -64,23 +81,19 @@ const Footer = () => {
                         </p>
                     </div>
 
-                    {/* Quick Access */}
-                    <div className="flex flex-col gap-6">
-                        <h4 className="text-[12px] font-black text-white uppercase tracking-[0.3em] opacity-50">
+                    {/* Navigation — horizontal on mobile, vertical on desktop */}
+                    <div className="flex flex-col gap-4">
+                        <h4 className="text-[11px] font-black text-white uppercase tracking-[0.3em] opacity-50">
                             Navigation
                         </h4>
-                        <div className="flex flex-col gap-3">
-                            {[
-                                { label: "Homepage", href: "/" },
-                                { label: "Practice Lab", href: "/interview" },
-                                { label: "Performance Hub", href: "/feedback" },
-                            ].map((link) => (
+                        <div className="flex flex-wrap gap-2 md:flex-col md:gap-3">
+                            {navLinks.map((link) => (
                                 <Link
                                     key={link.label}
                                     href={link.href}
-                                    className="text-light-400 hover:text-primary-200 transition-all text-sm w-fit flex items-center group/link"
+                                    className="text-light-400 hover:text-primary-200 transition-all text-sm w-fit flex items-center group/link px-3 py-1.5 md:px-0 md:py-0 bg-white/[0.03] md:bg-transparent rounded-lg md:rounded-none border border-white/5 md:border-0"
                                 >
-                                    <span className="w-0 group-hover/link:w-3 h-px bg-primary-200 mr-0 group-hover/link:mr-3 transition-all duration-300" />
+                                    <span className="hidden md:block w-0 group-hover/link:w-3 h-px bg-primary-200 mr-0 group-hover/link:mr-3 transition-all duration-300" />
                                     {link.label}
                                 </Link>
                             ))}
@@ -88,15 +101,15 @@ const Footer = () => {
                     </div>
 
                     {/* Team Section */}
-                    <div className="flex flex-col gap-6">
-                        <h4 className="text-[12px] font-black text-white uppercase tracking-[0.3em] opacity-50">
+                    <div className="flex flex-col gap-4">
+                        <h4 className="text-[11px] font-black text-white uppercase tracking-[0.3em] opacity-50">
                             Development Team
                         </h4>
-                        <div className="flex flex-col gap-5">
+                        <div className="flex flex-col gap-4">
                             {creators.map((creator) => (
                                 <div
                                     key={creator.name}
-                                    className="flex flex-col gap-1.5 group/item relative"
+                                    className="flex items-center justify-between gap-3 group/item relative"
                                 >
                                     {/* Hover Image Card */}
                                     <div className="absolute bottom-full left-0 mb-4 opacity-0 scale-90 group-hover/item:opacity-100 group-hover/item:scale-100 transition-all duration-300 pointer-events-none z-50">
@@ -110,74 +123,61 @@ const Footer = () => {
                                                 />
                                             </div>
                                         </div>
-                                        {/* Tooltip Arrow alternative */}
                                         <div className="absolute -bottom-1 left-6 w-3 h-3 bg-dark-200/80 border-r border-b border-white/10 rotate-45" />
                                     </div>
 
-                                    <div className="flex items-center justify-between">
+                                    <div className="flex flex-col gap-0.5">
                                         <p className="text-light-100 text-sm font-black tracking-tight cursor-default">
                                             {creator.name}
                                         </p>
-                                        <div className="flex items-center gap-3 opacity-0 group-hover/item:opacity-100 transition-opacity">
-                                            <a
-                                                href={creator.github}
-                                                target="_blank"
-                                                className="text-light-600 hover:text-primary-200 transition-colors"
-                                            >
-                                                <Github className="size-4.5" />
-                                            </a>
-                                            <a
-                                                href={creator.linkedin}
-                                                target="_blank"
-                                                className="text-light-600 hover:text-primary-200 transition-colors"
-                                            >
-                                                <Linkedin className="size-4.5" />
-                                            </a>
-                                        </div>
+                                        <p className="text-[10px] text-light-600 font-bold uppercase tracking-wider">
+                                            {creator.role}
+                                        </p>
                                     </div>
-                                    <p className="text-[10px] text-light-600 font-bold uppercase tracking-wider">
-                                        {creator.role}
-                                    </p>
+                                    <div className="flex items-center gap-2.5">
+                                        <a
+                                            href={creator.github}
+                                            target="_blank"
+                                            className="text-light-600 hover:text-primary-200 transition-colors p-1.5 rounded-lg hover:bg-white/5"
+                                        >
+                                            <Github className="size-4" />
+                                        </a>
+                                        <a
+                                            href={creator.linkedin}
+                                            target="_blank"
+                                            className="text-light-600 hover:text-primary-200 transition-colors p-1.5 rounded-lg hover:bg-white/5"
+                                        >
+                                            <Linkedin className="size-4" />
+                                        </a>
+                                    </div>
                                 </div>
                             ))}
                         </div>
                     </div>
                 </div>
 
-                {/* Academic Footer Bar */}
-                <div className="mt-20 pt-8 border-t border-white/5 flex flex-col items-center gap-6">
-                    <p className="text-light-600 text-[14px] font-black tracking-[0.3em] text-center uppercase">
-                        © {currentYear} INTERVIEW PILOT • PROUDLY DEVELOPED AT
-                        CCSIT, TMU UNIVERSITY
+                {/* Bottom Bar */}
+                <div className="mt-12 md:mt-20 pt-6 md:pt-8 border-t border-white/5 flex flex-col items-center gap-4">
+                    {/* Copyright */}
+                    <p className="text-light-600 text-[11px] md:text-[13px] font-black tracking-[0.2em] md:tracking-[0.3em] text-center uppercase">
+                        © {currentYear} Interview Pilot • CCSIT, TMU University
                     </p>
-                    <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-4">
-                        <div className="flex items-center gap-2 group cursor-help">
-                            <span className="text-[12px] font-black text-light-800 uppercase tracking-widest group-hover:text-light-600 transition-colors">
-                                Powered by High-End LLMs
+
+                    {/* Tech Stack — scrollable on mobile */}
+                    <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-2">
+                        <span className="text-[10px] font-black text-light-800 uppercase tracking-widest mr-1 hidden md:inline">
+                            Powered by
+                        </span>
+                        {techStack.map((tech, i) => (
+                            <span key={tech} className="flex items-center gap-2">
+                                {i > 0 && (
+                                    <span className="size-1.5 rounded-full bg-primary-200/30" />
+                                )}
+                                <span className="text-[10px] md:text-[11px] font-bold text-light-600 uppercase">
+                                    {tech}
+                                </span>
                             </span>
-                            <div className="flex items-center gap-1.5">
-                                <span className="size-2 rounded-full bg-primary-200/40" />
-                                <span className="text-[12px] font-black text-light-600 uppercase">
-                                    GPT-4o
-                                </span>
-                                <span className="size-2 rounded-full bg-primary-200/40" />
-                                <span className="text-[12px] font-black text-light-600 uppercase">
-                                    Gemini 2.5 Pro
-                                </span>
-                                <span className="size-2 rounded-full bg-primary-200/40" />
-                                <span className="text-[12px] font-black text-light-600 uppercase">
-                                    Vapi.ai
-                                </span>
-                                <span className="size-2 rounded-full bg-primary-200/40" />
-                                <span className="text-[12px] font-black text-light-600 uppercase">
-                                    Deepgram
-                                </span>
-                                <span className="size-2 rounded-full bg-primary-200/40" />
-                                <span className="text-[12px] font-black text-light-600 uppercase">
-                                    ElevenLabs
-                                </span>
-                            </div>
-                        </div>
+                        ))}
                     </div>
                 </div>
             </div>

@@ -14,6 +14,9 @@ import { ChevronRight, Sparkles, Rocket } from "lucide-react";
 import ScoreTrendChart from "@/components/ScoreTrendChart";
 import CategoryProgress from "@/components/CategoryProgress";
 import FeaturesShowcase from "@/components/FeaturesShowcase";
+import WhyInterviewPilot from "@/components/WhyInterviewPilot";
+import FAQSection from "@/components/FAQSection";
+import InterviewRecommendations from "@/components/InterviewRecommendations";
 import OnboardingFlow from "@/components/OnboardingFlow";
 
 const Home = async () => {
@@ -59,27 +62,27 @@ const Home = async () => {
     }
 
     return (
-        <div className="flex flex-col gap-12 pb-20 animate-in fade-in duration-1000">
+        <div className="flex flex-col gap-8 md:gap-12 pb-12 md:pb-20 animate-in fade-in duration-1000">
             {/* Cinematic Hero */}
             <section className="card-cta relative group/hero overflow-hidden">
                 {/* Background decorative elements */}
                 <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary-200/5 blur-[120px] rounded-full -mr-48 -mt-48 transition-all duration-700 group-hover/hero:bg-primary-200/10" />
 
                 <div className="flex flex-col gap-8 relative z-10 w-full lg:w-3/5">
-                    <div className="flex flex-col gap-4">
+                <div className="flex flex-col gap-3 md:gap-4">
                         <div className="badge-institutional animate-in slide-in-from-left duration-700">
                             <Sparkles className="size-3" />
-                            <span>
+                            <span className="text-xs md:text-sm">
                                 Final Year Project • BTECH CSE AI • CCSIT, TMU
                             </span>
                         </div>
-                        <h1 className="text-5xl lg:text-7xl font-black text-white leading-[1.1] tracking-tighter">
+                        <h1 className="text-3xl md:text-5xl lg:text-7xl font-black text-white leading-[1.1] tracking-tighter">
                             Master the Art of <br />
                             <span className="text-gradient-premium">
                                 Interviews with AI
                             </span>
                         </h1>
-                        <p className="text-xl text-light-400 max-w-xl leading-relaxed">
+                        <p className="text-base md:text-xl text-light-400 max-w-xl leading-relaxed">
                             Experience professional-grade simulations tailored
                             to your career path. Practiced by the next
                             generation of AI engineers at Teerthanker Mahaveer
@@ -90,7 +93,7 @@ const Home = async () => {
                     <div className="flex flex-wrap gap-4 items-center">
                         <Button
                             asChild
-                            className="btn-primary h-14 px-8 text-base shadow-[0_0_30px_rgba(202,197,254,0.3)] hover:scale-105 active:scale-95 transition-all"
+                            className="btn-primary h-12 md:h-14 px-6 md:px-8 text-sm md:text-base shadow-[0_0_30px_rgba(202,197,254,0.3)] hover:scale-105 active:scale-95 transition-all"
                         >
                             <AuthGateLink
                                 href="/interview"
@@ -101,7 +104,7 @@ const Home = async () => {
                                 <ChevronRight className="size-5" />
                             </AuthGateLink>
                         </Button>
-                        <div className="flex -space-x-3 items-center ml-2">
+                        <div className="hidden sm:flex -space-x-3 items-center ml-2">
                             {randomUsers.length > 0
                                 ? randomUsers.map((u) => (
                                       <div
@@ -140,15 +143,15 @@ const Home = async () => {
                     </div>
                 </div>
 
-                <div className="relative w-full lg:w-2/5 flex justify-center lg:justify-end animate-in zoom-in duration-1000 delay-300 mt-10 lg:mt-0">
-                    <div className="relative group/img-container">
+                <div className="relative w-full lg:w-2/5 flex justify-center lg:justify-end animate-in zoom-in duration-1000 delay-300 mt-6 lg:mt-0">
+                    <div className="relative group/img-container max-w-[250px] md:max-w-[400px] lg:max-w-[500px]">
                         <div className="absolute inset-0 bg-primary-200/20 blur-[80px] rounded-full scale-75 group-hover/img-container:scale-100 transition-all duration-700" />
                         <Image
                             src="/robot.png"
                             alt="robo-dude"
                             width={500}
                             height={500}
-                            className="relative z-10 drop-shadow-[0_0_50px_rgba(202,197,254,0.3)] hover:scale-105 hover:-rotate-3 transition-all duration-700 cursor-none"
+                            className="relative z-10 drop-shadow-[0_0_50px_rgba(202,197,254,0.3)] hover:scale-105 hover:-rotate-3 transition-all duration-700 cursor-none w-full h-auto"
                         />
                     </div>
                 </div>
@@ -156,27 +159,41 @@ const Home = async () => {
 
             <FeaturesShowcase />
 
+            {/* Guest-only: Why InterviewPilot USP Sections */}
+            {!isAuthenticated && <WhyInterviewPilot />}
+
+            {/* Guest-only: FAQ Section */}
+            {!isAuthenticated && <FAQSection />}
+
             {/* Content Sections */}
             {isAuthenticated ? (
-                <div className="flex flex-col gap-16">
+                <div className="flex flex-col gap-8 md:gap-16">
+                    {/* Personalized Recommendations */}
+                    {hasPastInterviews && feedbacks && (
+                        <InterviewRecommendations
+                            feedbacks={feedbacks}
+                            interviews={userInterviews || []}
+                        />
+                    )}
+
                     {hasPastInterviews && (
                         <section className="flex flex-col gap-8 animate-in slide-in-from-bottom-8 duration-700">
                             <div className="flex items-end justify-between border-b border-white/5 pb-6">
                                 <div className="flex flex-col gap-1">
-                                    <h2 className="text-4xl font-black text-white tracking-tight">
+                                    <h2 className="text-2xl md:text-4xl font-black text-white tracking-tight">
                                         Performance Overview
                                     </h2>
                                     <p className="text-md text-light-400">
-                                        Track your progress and proficiency levels
-                                        across different technologies.
+                                        Track your progress and proficiency
+                                        levels across different technologies.
                                     </p>
                                 </div>
                             </div>
-                            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
-                                <div className="lg:col-span-8 glass-card-extreme p-8 rounded-[2rem] overflow-hidden">
+                            <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 md:gap-8 items-stretch">
+                                <div className="lg:col-span-8 glass-card-extreme p-4 md:p-8 rounded-2xl md:rounded-[2rem] overflow-hidden">
                                     <ScoreTrendChart data={trendData} />
                                 </div>
-                                <div className="lg:col-span-4 glass-card-extreme p-8 rounded-[2rem] overflow-hidden">
+                                <div className="lg:col-span-4 glass-card-extreme p-4 md:p-8 rounded-2xl md:rounded-[2rem] overflow-hidden">
                                     <CategoryProgress categories={categories} />
                                 </div>
                             </div>
@@ -186,7 +203,7 @@ const Home = async () => {
                     <section className="flex flex-col gap-8 animate-in slide-in-from-bottom-12 duration-1000">
                         <div className="flex items-end justify-between border-b border-white/5 pb-6">
                             <div className="flex flex-col gap-1">
-                                <h2 className="text-4xl font-black text-white tracking-tight">
+                                <h2 className="text-2xl md:text-4xl font-black text-white tracking-tight">
                                     Your Interviews
                                 </h2>
                                 <p className="text-md text-light-400">
@@ -204,7 +221,7 @@ const Home = async () => {
                             </Link>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
                             {hasPastInterviews ? (
                                 userInterviews?.slice(0, 3).map((interview) => {
                                     const feedback = feedbacks?.find(
@@ -229,7 +246,7 @@ const Home = async () => {
                                     );
                                 })
                             ) : (
-                                <div className="col-span-full py-10 flex flex-col items-center justify-center gap-4 glass-card-extreme rounded-[2rem] border-dashed border-white/10">
+                                <div className="col-span-full py-8 md:py-10 flex flex-col items-center justify-center gap-4 glass-card-extreme rounded-2xl md:rounded-[2rem] border-dashed border-white/10">
                                     <div className="p-4 bg-white/5 rounded-full">
                                         <Sparkles className="size-10 text-light-600" />
                                     </div>
@@ -242,7 +259,10 @@ const Home = async () => {
                                             career.
                                         </p>
                                     </div>
-                                    <Button asChild className="btn-primary mt-4">
+                                    <Button
+                                        asChild
+                                        className="btn-primary mt-4"
+                                    >
                                         <Link href="/interview">
                                             Start Practice Now
                                         </Link>
@@ -253,7 +273,7 @@ const Home = async () => {
                     </section>
                 </div>
             ) : (
-                <section className="flex flex-col items-center gap-8 py-20 animate-in slide-in-from-bottom-8 duration-700">
+                <section className="flex flex-col items-center gap-8 py-10 animate-in slide-in-from-bottom-8 duration-700">
                     <div className="relative">
                         <div className="size-24 rounded-3xl bg-primary-200/10 border border-primary-200/20 flex items-center justify-center">
                             <Rocket className="size-12 text-primary-200" />
@@ -275,7 +295,10 @@ const Home = async () => {
                             asChild
                             className="btn-primary h-14 px-8 text-base shadow-[0_0_30px_rgba(202,197,254,0.3)] hover:scale-105 active:scale-95 transition-all"
                         >
-                            <Link href="/sign-in" className="flex items-center gap-2">
+                            <Link
+                                href="/sign-in"
+                                className="flex items-center gap-2"
+                            >
                                 <span>Sign In to Start</span>
                                 <ChevronRight className="size-5" />
                             </Link>
@@ -285,9 +308,7 @@ const Home = async () => {
                             variant="outline"
                             className="h-14 px-8 text-base border-white/10 hover:bg-white/5 hover:border-primary-200/30 transition-all"
                         >
-                            <Link href="/sign-up">
-                                Create Account
-                            </Link>
+                            <Link href="/sign-up">Create Account</Link>
                         </Button>
                     </div>
                 </section>

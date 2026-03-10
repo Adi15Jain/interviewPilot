@@ -95,7 +95,7 @@ const FeatureCard = ({
         viewport={{ once: true }}
         transition={{ duration: 0.7, delay, type: "spring", stiffness: 80 }}
         whileHover={{ y: -8, transition: { duration: 0.3 } }}
-        className="relative group/feature rounded-[2.5rem] p-[1px] overflow-hidden"
+        className="relative group/feature rounded-[1.5rem] md:rounded-[2.5rem] p-[1px] overflow-hidden"
     >
         {/* Animated border gradient */}
         <motion.div
@@ -115,14 +115,14 @@ const FeatureCard = ({
             transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
         />
 
-        <div className="relative glass-card-extreme p-8 rounded-[2.5rem] h-full flex flex-col gap-6 border-0 bg-dark-200/80">
+        <div className="relative glass-card-extreme p-5 md:p-8 rounded-[1.5rem] md:rounded-[2.5rem] h-full flex flex-col gap-4 md:gap-6 border-0 bg-dark-200/80">
             {/* Hover glow */}
             <div
                 className="absolute top-0 right-0 w-40 h-40 rounded-full blur-[80px] opacity-0 group-hover/feature:opacity-30 transition-opacity duration-700 -mt-10 -mr-10"
                 style={{ background: accentColor }}
             />
 
-            <div className="relative z-10 flex flex-col gap-6">
+            <div className="relative z-10 flex flex-col gap-4 md:gap-6">
                 <motion.div
                     className="size-14 rounded-2xl border border-white/10 flex items-center justify-center relative"
                     style={{ background: `${accentColor}10` }}
@@ -267,7 +267,7 @@ const FeaturesShowcase = () => {
     ];
 
     return (
-        <section className="flex flex-col gap-12 py-6 relative overflow-hidden">
+        <section className="flex flex-col gap-8 md:gap-12 py-4 md:py-6 relative overflow-hidden">
             {/* Background Decorative Elements */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-primary-200/5 blur-[150px] rounded-full pointer-events-none" />
 
@@ -280,23 +280,23 @@ const FeaturesShowcase = () => {
                 className="flex flex-col gap-2 relative z-10 text-center items-center"
             >
                 <div className="flex badge-institutional">
-                    <Zap className="size-6 text-primary-200" />
-                    <span className="text-lg">Advanced Architecture</span>
+                    <Zap className="size-5 md:size-6 text-primary-200" />
+                    <span className="text-sm md:text-lg">Advanced Architecture</span>
                 </div>
-                <h2 className="text-4xl lg:text-5xl font-black text-white tracking-tight">
+                <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-white tracking-tight">
                     Engineered for{" "}
                     <span className="text-gradient-premium">Precision</span>
                 </h2>
-                <p className="text-light-400 text-lg max-w-2xl">
+                <p className="text-light-400 text-base md:text-lg max-w-2xl">
                     A neural interview ecosystem powered by cutting-edge
                     pipelines and
-                    <br />
+                    <br className="hidden md:block" />
                     multi-agent coordination.
                 </p>
             </motion.div>
 
             {/* Feature Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 relative z-10">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8 relative z-10">
                 <FeatureCard
                     icon={Globe2}
                     title="Multilingual Synthesis"

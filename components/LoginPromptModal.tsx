@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useCallback } from "react";
+import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 import { X, Lock, Sparkles } from "lucide-react";
 
@@ -32,7 +33,7 @@ const LoginPromptModal = ({ isOpen, onClose }: LoginPromptModalProps) => {
 
     if (!isOpen) return null;
 
-    return (
+    return createPortal(
         <div
             className="fixed inset-0 z-[200] flex items-center justify-center p-4"
             role="dialog"
@@ -40,7 +41,7 @@ const LoginPromptModal = ({ isOpen, onClose }: LoginPromptModalProps) => {
         >
             {/* Backdrop */}
             <div
-                className="absolute inset-0 bg-black/60 backdrop-blur-md animate-in fade-in duration-300"
+                className="absolute inset-0 bg-black/80 backdrop-blur-xl animate-in fade-in duration-300"
                 onClick={onClose}
             />
 
@@ -49,7 +50,7 @@ const LoginPromptModal = ({ isOpen, onClose }: LoginPromptModalProps) => {
                 {/* Gradient border wrapper */}
                 <div className="absolute -inset-[1px] rounded-3xl bg-gradient-to-br from-primary-200/40 via-transparent to-primary-200/20 pointer-events-none" />
 
-                <div className="relative bg-[#0a0d14]/95 backdrop-blur-2xl rounded-3xl border border-white/10 p-8 shadow-[0_25px_80px_rgba(0,0,0,0.6),0_0_60px_rgba(202,197,254,0.08)]">
+                <div className="relative bg-[#0a0d14] backdrop-blur-3xl rounded-3xl border border-white/10 p-8 shadow-[0_25px_80px_rgba(0,0,0,0.8),0_0_80px_rgba(202,197,254,0.1)]">
                     {/* Close button */}
                     <button
                         onClick={onClose}
@@ -107,7 +108,8 @@ const LoginPromptModal = ({ isOpen, onClose }: LoginPromptModalProps) => {
                     </div>
                 </div>
             </div>
-        </div>
+        </div>,
+        document.body,
     );
 };
 

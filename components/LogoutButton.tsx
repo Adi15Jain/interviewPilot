@@ -13,7 +13,7 @@ const LogoutButton = () => {
     const handleLogout = () => {
         startTransition(async () => {
             const result = await signOut();
-            router.push("/sign-in");
+            router.push("/");
         });
     };
 

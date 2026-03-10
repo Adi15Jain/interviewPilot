@@ -5,8 +5,8 @@ const secret = new TextEncoder().encode(
     process.env.JWT_SECRET || "your-secret-key-change-this-in-production",
 );
 
-// Session duration (1 week)
-export const SESSION_DURATION = 60 * 60 * 24 * 7;
+// Session duration (24 hours)
+export const SESSION_DURATION = 60 * 60 * 24;
 
 export async function hashPassword(password: string): Promise<string> {
     return await bcrypt.hash(password, 10);
