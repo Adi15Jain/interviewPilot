@@ -1,8 +1,11 @@
+import { redirect } from "next/navigation";
 import InterviewForm from "@/components/InterviewForm";
 import { getCurrentUser } from "@/lib/actions/auth.action";
 
 const Page = async () => {
     const user = await getCurrentUser();
+
+    if (!user) redirect("/sign-in");
 
     return (
         <div className="flex flex-col gap-10 animate-in fade-in slide-in-from-bottom-4 duration-700">

@@ -129,7 +129,7 @@ const NavbarClient = ({ user, UserProfileButton }: NavbarClientProps) => {
                 </div>
 
                 {/* Language Switcher */}
-                <div className="relative" ref={dropdownRef}>
+                {/* <div className="relative" ref={dropdownRef}>
                     <button
                         onClick={() => setLangOpen(!langOpen)}
                         className="flex items-center gap-2 px-3 py-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-primary-200/30 transition-all duration-300 text-light-100 hover:text-white"
@@ -165,7 +165,7 @@ const NavbarClient = ({ user, UserProfileButton }: NavbarClientProps) => {
                             ))}
                         </div>
                     )}
-                </div>
+                </div> */}
 
                 <div className="flex items-center gap-4 border-l border-white/10 pl-8 ml-2">
                     {user ? (

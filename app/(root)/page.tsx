@@ -3,13 +3,14 @@ import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
 import InterviewCard from "@/components/InterviewCard";
+import AuthGateLink from "@/components/AuthGateLink";
 
 import { getCurrentUser, getRandomUsers } from "@/lib/actions/auth.action";
 import {
     getInterviewsByUserId,
     getFeedbacksByUserId,
 } from "@/lib/actions/general.action";
-import { ChevronRight, Sparkles } from "lucide-react";
+import { ChevronRight, Sparkles, Rocket } from "lucide-react";
 import ScoreTrendChart from "@/components/ScoreTrendChart";
 import CategoryProgress from "@/components/CategoryProgress";
 import FeaturesShowcase from "@/components/FeaturesShowcase";
@@ -17,14 +18,15 @@ import OnboardingFlow from "@/components/OnboardingFlow";
 
 const Home = async () => {
     const user = await getCurrentUser();
+    const isAuthenticated = !!user;
 
     const [userInterviews, feedbacks, randomUsers] = await Promise.all([
-        getInterviewsByUserId(user?.id!),
-        getFeedbacksByUserId(user?.id!),
+        user ? getInterviewsByUserId(user.id) : Promise.resolve([]),
+        user ? getFeedbacksByUserId(user.id) : Promise.resolve([]),
         getRandomUsers(4),
     ]);
 
-    const hasPastInterviews = userInterviews?.length! > 0;
+    const hasPastInterviews = (userInterviews?.length ?? 0) > 0;
 
     // Process Trend Data
     const trendData =
@@ -90,13 +92,14 @@ const Home = async () => {
                             asChild
                             className="btn-primary h-14 px-8 text-base shadow-[0_0_30px_rgba(202,197,254,0.3)] hover:scale-105 active:scale-95 transition-all"
                         >
-                            <Link
+                            <AuthGateLink
                                 href="/interview"
+                                isAuthenticated={isAuthenticated}
                                 className="flex items-center gap-2"
                             >
                                 <span>Take Interview</span>
                                 <ChevronRight className="size-5" />
-                            </Link>
+                            </AuthGateLink>
                         </Button>
                         <div className="flex -space-x-3 items-center ml-2">
                             {randomUsers.length > 0
@@ -154,100 +157,141 @@ const Home = async () => {
             <FeaturesShowcase />
 
             {/* Content Sections */}
-            <div className="flex flex-col gap-16">
-                {hasPastInterviews && (
-                    <section className="flex flex-col gap-8 animate-in slide-in-from-bottom-8 duration-700">
+            {isAuthenticated ? (
+                <div className="flex flex-col gap-16">
+                    {hasPastInterviews && (
+                        <section className="flex flex-col gap-8 animate-in slide-in-from-bottom-8 duration-700">
+                            <div className="flex items-end justify-between border-b border-white/5 pb-6">
+                                <div className="flex flex-col gap-1">
+                                    <h2 className="text-4xl font-black text-white tracking-tight">
+                                        Performance Overview
+                                    </h2>
+                                    <p className="text-md text-light-400">
+                                        Track your progress and proficiency levels
+                                        across different technologies.
+                                    </p>
+                                </div>
+                            </div>
+                            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+                                <div className="lg:col-span-8 glass-card-extreme p-8 rounded-[2rem] overflow-hidden">
+                                    <ScoreTrendChart data={trendData} />
+                                </div>
+                                <div className="lg:col-span-4 glass-card-extreme p-8 rounded-[2rem] overflow-hidden">
+                                    <CategoryProgress categories={categories} />
+                                </div>
+                            </div>
+                        </section>
+                    )}
+
+                    <section className="flex flex-col gap-8 animate-in slide-in-from-bottom-12 duration-1000">
                         <div className="flex items-end justify-between border-b border-white/5 pb-6">
                             <div className="flex flex-col gap-1">
                                 <h2 className="text-4xl font-black text-white tracking-tight">
-                                    Performance Overview
+                                    Your Interviews
                                 </h2>
                                 <p className="text-md text-light-400">
-                                    Track your progress and proficiency levels
-                                    across different technologies.
+                                    Manage and review your past interview
+                                    simulations and performance feedback.
                                 </p>
                             </div>
+                            <Link href="/history">
+                                <Button
+                                    variant="ghost"
+                                    className="text-primary-200 hover:text-white transition-colors font-bold text-sm"
+                                >
+                                    View All History
+                                </Button>
+                            </Link>
                         </div>
-                        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
-                            <div className="lg:col-span-8 glass-card-extreme p-8 rounded-[2rem] overflow-hidden">
-                                <ScoreTrendChart data={trendData} />
-                            </div>
-                            <div className="lg:col-span-4 glass-card-extreme p-8 rounded-[2rem] overflow-hidden">
-                                <CategoryProgress categories={categories} />
-                            </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {hasPastInterviews ? (
+                                userInterviews?.slice(0, 3).map((interview) => {
+                                    const feedback = feedbacks?.find(
+                                        (f) => f.interviewId === interview.id,
+                                    );
+
+                                    return (
+                                        <div
+                                            key={interview.id}
+                                            className="transition-all hover:scale-[1.02] hover:-translate-y-1"
+                                        >
+                                            <InterviewCard
+                                                interviewId={interview.id}
+                                                userId={user?.id!}
+                                                role={interview.role}
+                                                type={interview.type}
+                                                techstack={interview.techstack}
+                                                createdAt={interview.createdAt}
+                                                feedback={feedback}
+                                            />
+                                        </div>
+                                    );
+                                })
+                            ) : (
+                                <div className="col-span-full py-10 flex flex-col items-center justify-center gap-4 glass-card-extreme rounded-[2rem] border-dashed border-white/10">
+                                    <div className="p-4 bg-white/5 rounded-full">
+                                        <Sparkles className="size-10 text-light-600" />
+                                    </div>
+                                    <div className="text-center">
+                                        <h3 className="text-xl font-bold text-white">
+                                            No interviews yet
+                                        </h3>
+                                        <p className="text-light-400">
+                                            Take your first leap towards a dream
+                                            career.
+                                        </p>
+                                    </div>
+                                    <Button asChild className="btn-primary mt-4">
+                                        <Link href="/interview">
+                                            Start Practice Now
+                                        </Link>
+                                    </Button>
+                                </div>
+                            )}
                         </div>
                     </section>
-                )}
-
-                <section className="flex flex-col gap-8 animate-in slide-in-from-bottom-12 duration-1000">
-                    <div className="flex items-end justify-between border-b border-white/5 pb-6">
-                        <div className="flex flex-col gap-1">
-                            <h2 className="text-4xl font-black text-white tracking-tight">
-                                Your Interviews
-                            </h2>
-                            <p className="text-md text-light-400">
-                                Manage and review your past interview
-                                simulations and performance feedback.
-                            </p>
+                </div>
+            ) : (
+                <section className="flex flex-col items-center gap-8 py-20 animate-in slide-in-from-bottom-8 duration-700">
+                    <div className="relative">
+                        <div className="size-24 rounded-3xl bg-primary-200/10 border border-primary-200/20 flex items-center justify-center">
+                            <Rocket className="size-12 text-primary-200" />
                         </div>
-                        <Link href="/history">
-                            <Button
-                                variant="ghost"
-                                className="text-primary-200 hover:text-white transition-colors font-bold text-sm"
-                            >
-                                View All History
-                            </Button>
-                        </Link>
+                        <div className="absolute inset-0 bg-primary-200/20 blur-3xl rounded-full -z-10" />
                     </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {hasPastInterviews ? (
-                            userInterviews?.slice(0, 3).map((interview) => {
-                                const feedback = feedbacks?.find(
-                                    (f) => f.interviewId === interview.id,
-                                );
-
-                                return (
-                                    <div
-                                        key={interview.id}
-                                        className="transition-all hover:scale-[1.02] hover:-translate-y-1"
-                                    >
-                                        <InterviewCard
-                                            interviewId={interview.id}
-                                            userId={user?.id!}
-                                            role={interview.role}
-                                            type={interview.type}
-                                            techstack={interview.techstack}
-                                            createdAt={interview.createdAt}
-                                            feedback={feedback}
-                                        />
-                                    </div>
-                                );
-                            })
-                        ) : (
-                            <div className="col-span-full py-10 flex flex-col items-center justify-center gap-4 glass-card-extreme rounded-[2rem] border-dashed border-white/10">
-                                <div className="p-4 bg-white/5 rounded-full">
-                                    <Sparkles className="size-10 text-light-600" />
-                                </div>
-                                <div className="text-center">
-                                    <h3 className="text-xl font-bold text-white">
-                                        No interviews yet
-                                    </h3>
-                                    <p className="text-light-400">
-                                        Take your first leap towards a dream
-                                        career.
-                                    </p>
-                                </div>
-                                <Button asChild className="btn-primary mt-4">
-                                    <Link href="/interview">
-                                        Start Practice Now
-                                    </Link>
-                                </Button>
-                            </div>
-                        )}
+                    <div className="text-center flex flex-col gap-3">
+                        <h2 className="text-4xl font-black text-white tracking-tight">
+                            Ready to Ace Your Next Interview?
+                        </h2>
+                        <p className="text-light-400 text-lg max-w-lg mx-auto leading-relaxed">
+                            Sign in to access AI-powered interview simulations,
+                            track your scores, and get personalized feedback to
+                            level up your career.
+                        </p>
+                    </div>
+                    <div className="flex gap-4">
+                        <Button
+                            asChild
+                            className="btn-primary h-14 px-8 text-base shadow-[0_0_30px_rgba(202,197,254,0.3)] hover:scale-105 active:scale-95 transition-all"
+                        >
+                            <Link href="/sign-in" className="flex items-center gap-2">
+                                <span>Sign In to Start</span>
+                                <ChevronRight className="size-5" />
+                            </Link>
+                        </Button>
+                        <Button
+                            asChild
+                            variant="outline"
+                            className="h-14 px-8 text-base border-white/10 hover:bg-white/5 hover:border-primary-200/30 transition-all"
+                        >
+                            <Link href="/sign-up">
+                                Create Account
+                            </Link>
+                        </Button>
                     </div>
                 </section>
-            </div>
+            )}
         </div>
     );
 };
