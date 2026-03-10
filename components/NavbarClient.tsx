@@ -69,11 +69,12 @@ const NavbarClient = ({ user, UserProfileButton }: NavbarClientProps) => {
                 >
                     <div className="relative">
                         <Image
-                            src="/logo.svg"
+                            src="/logo.png"
                             alt="InterviewPilot Logo"
-                            width={36}
-                            height={30}
-                            className="group-hover:scale-110 group-hover:rotate-3 transition-all duration-500"
+                            width={60}
+                            height={60}
+                            unoptimized
+                            className="-my-3 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500"
                         />
                         <div className="absolute inset-0 bg-primary-200/30 blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
                     </div>

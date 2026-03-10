@@ -279,7 +279,7 @@ const WhyInterviewPilot = () => {
     ];
 
     const stats = [
-        { value: 500, suffix: "+", label: "Students" },
+        { value: 500, suffix: "+", label: "Candidates" },
         { value: 9, suffix: "+", label: "Domains" },
         { value: 7, suffix: "+", label: "Languages" },
         { value: 5, suffix: "", label: "AI Agents" },

@@ -63,21 +63,17 @@ const Footer = () => {
                             </div>
                             <div className="flex flex-col gap-0.5">
                                 <p className="text-primary-200/80 text-[11px] font-black uppercase tracking-[0.2em]">
-                                    A Final Year Major Project
+                                    Next-Gen AI Platform
                                 </p>
                                 <p className="text-light-100 text-sm font-bold uppercase tracking-tight">
-                                    College of Computing Sciences & IT
-                                </p>
-                                <p className="text-light-400 text-sm font-semibold">
-                                    Teerthanker Mahaveer University, Moradabad
+                                    Adaptive Learning Ecosystem
                                 </p>
                             </div>
                         </div>
                         <p className="text-light-400 text-sm leading-relaxed max-w-sm">
                             The ultimate AI-powered interview practice platform.
                             Designed and developed as a pinnacle engineering
-                            achievement by BTECH CSE AI Students (Batch
-                            2022-26).
+                            achievement for high-performance candidates.
                         </p>
                     </div>
 
@@ -160,7 +156,7 @@ const Footer = () => {
                 <div className="mt-12 md:mt-20 pt-6 md:pt-8 border-t border-white/5 flex flex-col items-center gap-4">
                     {/* Copyright */}
                     <p className="text-light-600 text-[11px] md:text-[13px] font-black tracking-[0.2em] md:tracking-[0.3em] text-center uppercase">
-                        © {currentYear} Interview Pilot • CCSIT, TMU University
+                        © {currentYear} Interview Pilot
                     </p>
 
                     {/* Tech Stack — scrollable on mobile */}

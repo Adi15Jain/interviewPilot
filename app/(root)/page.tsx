@@ -69,11 +69,11 @@ const Home = async () => {
                 <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary-200/5 blur-[120px] rounded-full -mr-48 -mt-48 transition-all duration-700 group-hover/hero:bg-primary-200/10" />
 
                 <div className="flex flex-col gap-8 relative z-10 w-full lg:w-3/5">
-                <div className="flex flex-col gap-3 md:gap-4">
+                    <div className="flex flex-col gap-3 md:gap-4">
                         <div className="badge-institutional animate-in slide-in-from-left duration-700">
                             <Sparkles className="size-3" />
                             <span className="text-xs md:text-sm">
-                                Final Year Project • BTECH CSE AI • CCSIT, TMU
+                                AI-Powered Performance Practice
                             </span>
                         </div>
                         <h1 className="text-3xl md:text-5xl lg:text-7xl font-black text-white leading-[1.1] tracking-tighter">
@@ -84,9 +84,8 @@ const Home = async () => {
                         </h1>
                         <p className="text-base md:text-xl text-light-400 max-w-xl leading-relaxed">
                             Experience professional-grade simulations tailored
-                            to your career path. Practiced by the next
-                            generation of AI engineers at Teerthanker Mahaveer
-                            University.
+                            to your career path. Trusted by top candidates and
+                            professionals to master high-stakes conversations.
                         </p>
                     </div>
 
@@ -137,21 +136,24 @@ const Home = async () => {
                                       </div>
                                   ))}
                             <span className="ml-6 text-xs font-bold text-light-600 uppercase tracking-widest">
-                                Trusted by 500+ Students
+                                Trusted by 500+ Candidates
                             </span>
                         </div>
                     </div>
                 </div>
 
-                <div className="relative w-full lg:w-2/5 flex justify-center lg:justify-end animate-in zoom-in duration-1000 delay-300 mt-6 lg:mt-0">
-                    <div className="relative group/img-container max-w-[250px] md:max-w-[400px] lg:max-w-[500px]">
+                {/* Hero Image — absolute on lg for big impact, normal flow on mobile */}
+                <div className="relative w-full lg:absolute lg:right-0 lg:top-1/2 lg:-translate-y-1/2 lg:w-[50%] flex justify-center lg:justify-end animate-in zoom-in duration-1000 delay-300 mt-6 lg:mt-0">
+                    <div className="relative group/img-container max-w-[320px] md:max-w-[450px] lg:max-w-[600px]">
                         <div className="absolute inset-0 bg-primary-200/20 blur-[80px] rounded-full scale-75 group-hover/img-container:scale-100 transition-all duration-700" />
                         <Image
-                            src="/robot.png"
-                            alt="robo-dude"
-                            width={500}
-                            height={500}
-                            className="relative z-10 drop-shadow-[0_0_50px_rgba(202,197,254,0.3)] hover:scale-105 hover:-rotate-3 transition-all duration-700 cursor-none w-full h-auto"
+                            src="/hero-ai.png"
+                            alt="Professional AI Interviewer"
+                            width={2048}
+                            height={2048}
+                            priority
+                            unoptimized
+                            className="relative z-10 drop-shadow-[0_0_50px_rgba(202,197,254,0.3)] hover:scale-105 transition-all duration-700 w-full h-auto"
                         />
                     </div>
                 </div>
